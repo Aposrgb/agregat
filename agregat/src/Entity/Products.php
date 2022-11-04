@@ -22,7 +22,7 @@ class Products
     #[Groups(['get_products', 'get_baskets'])]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
     private ?string $img = null;
 
