@@ -38,7 +38,7 @@ services:
     image: nginx:latest
     container_name: nginx-agregat
     ports:
-      - 8560:80
+      - 443:80
     depends_on:
       - php-fpm
     networks:
