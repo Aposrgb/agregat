@@ -1,0 +1,65 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: My App
+            description: This is an awesome app!
+            version: 1.0.0
+        components:
+            schemas:
+                ApiException:
+                    type: object
+                    properties:
+                        error:
+                            type: object
+                            properties:
+                                status:
+                                    type: integer
+                                    description: HTTP код ответа сервера
+                                message:
+                                    type: string
+                                    description: Сообщение об ошибке
+                                detail:
+                                    type: string
+                                    description: Подробное описание ошибки (не null только на dev сервере)
+                                validationError:
+                                    type: object
+                                    properties:
+                                        query:
+                                            type: array
+                                            description: Параметры из query
+                                            items:
+                                                type: object
+                                                properties:
+                                                    name:
+                                                        type: string
+                                                        description: Название отправленного параметра
+                                                    message:
+                                                        type: string
+                                                        description: Текст ошибки валидации по этому параметру (null == ошибки нет)
+                                        body:
+                                            type: array
+                                            description: Параметры из body
+                                            items:
+                                                type: object
+                                                properties:
+                                                    name:
+                                                        type: string
+                                                        description: Название отправленного параметра
+                                                    message:
+                                                        type: string
+                                                        description: Текст ошибки валидации по этому параметру (null == ошибки нет)
+
+            securitySchemes:
+                ApiKeyAuth: # arbitrary name for the security scheme
+                    type: apiKey
+                    in: header
+                    name: apiKey
+        security:
+            - ApiKeyAuth: [ ]
+    areas: # to filter documented areas
+        default:
+            path_patterns: [ ^/api ]
+            host_patterns: [ ^api\. ]
+        api:
+            path_patterns:
+                - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
