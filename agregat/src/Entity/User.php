@@ -54,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Basket::class)]
     private Collection $baskets;
 
-    #[ORM\OneToMany(mappedBy: 'favoriteUser', targetEntity: Products::class)]
+    #[ORM\ManyToMany(targetEntity: Products::class, mappedBy: 'favoriteUser')]
     private Collection $favoritesProducts;
 
     public function __construct()
@@ -320,8 +320,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function addFavoritesProduct(Products $favoritesProduct): self
     {
         if (!$this->favoritesProducts->contains($favoritesProduct)) {
-            $this->favoritesProducts->add($favoritesProduct);
-            $favoritesProduct->setFavoriteUser($this);
+            $this->favoritesProducts[] = $favoritesProduct;
         }
 
         return $this;
@@ -329,12 +328,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeFavoritesProduct(Products $favoritesProduct): self
     {
-        if ($this->favoritesProducts->removeElement($favoritesProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($favoritesProduct->getFavoriteUser() === $this) {
-                $favoritesProduct->setFavoriteUser(null);
-            }
-        }
+        $this->favoritesProducts->removeElement($favoritesProduct);
 
         return $this;
     }

@@ -36,8 +36,29 @@ class ProductsRepository extends ServiceEntityRepository
 
     public function getProductsByFilter(ProductsFilter $productsFilter): Paginator
     {
-        return new Paginator($this->createQueryBuilder('p')
-            ->orderBy('p.id', 'ASC')
+        $qb = $this->createQueryBuilder('p');
+        if ($productsFilter->getCategoryId()) {
+            $qb
+                ->join('p.categories', 'c')
+                ->andWhere('c.id = :id')
+                ->setParameter('id', $productsFilter->getCategoryId());
+        }
+        if ($productsFilter->getIsActual()) {
+            $qb->andWhere('p.isActual = true');
+        }
+        if ($productsFilter->getIsAvailable()) {
+            $qb->andWhere('p.isAvailable = true');
+        }
+        if ($productsFilter->getIsNew()) {
+            $qb->andWhere('p.isNew = true');
+        }
+        if ($productsFilter->getIsPopular()) {
+            $qb->andWhere('p.isPopular = true');
+        }
+        if ($productsFilter->getIsRecommend()) {
+            $qb->andWhere('p.isRecommend = true');
+        }
+        return new Paginator($qb
             ->setFirstResult($productsFilter->getPagination()->getFirstMaxResult())
             ->setMaxResults($productsFilter->getPagination()->getLimit())
         );

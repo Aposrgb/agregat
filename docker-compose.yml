@@ -6,9 +6,9 @@ services:
     ports:
       - 5460:5432
     environment:
-      POSTGRES_PASSWORD: root
-      POSTGRES_USER: root
-      POSTGRES_DB: agregat_db
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_DB
     networks:
       - agregat
   
@@ -38,7 +38,8 @@ services:
     image: nginx:latest
     container_name: nginx-agregat
     ports:
-      - 443:80
+      - 80:80
+      - 443:443
     depends_on:
       - php-fpm
     networks:

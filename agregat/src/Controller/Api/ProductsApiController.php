@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Helper\Exception\ApiException;
 use App\Helper\Filter\ProductsFilter;
+use App\Repository\CategoriesRepository;
 use App\Repository\ProductsRepository;
 use App\Service\ProductsService;
 use App\Service\ValidatorService;
@@ -40,6 +41,48 @@ class ProductsApiController extends AbstractController
      *     @OA\Schema(type="integer", default="10")
      * )
      *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isActual]",
+     *     description="Актуальность",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isRecommend]",
+     *     description="Рекомендованный",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isAvailable]",
+     *     description="Доступный",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isPopular]",
+     *     description="Популярный",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isNew]",
+     *     description="Новый",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="search[categoryId]",
+     *     description="id - категории",
+     *     @OA\Schema(type="integer")
+     * )
+     *
      * @OA\Response(
      *     response="400",
      *     description="Not valid data",
@@ -64,15 +107,18 @@ class ProductsApiController extends AbstractController
      */
     #[Route('', name: 'get_products', methods: ['GET'])]
     public function getProducts(
-        Request             $request,
-        SerializerInterface $serializer,
-        ValidatorService    $validatorService,
-        ProductsRepository  $productsRepository,
+        Request              $request,
+        SerializerInterface  $serializer,
+        ValidatorService     $validatorService,
+        ProductsRepository   $productsRepository,
     ): JsonResponse
     {
+        $query = $request->query->all();
         /** @var ProductsFilter $productsFilter */
         $productsFilter = $serializer->deserialize(
-            json_encode($request->query->all()), ProductsFilter::class, 'json'
+            json_encode(
+                array_merge($query, $query['filter'] ?? [], $query['search'] ?? [])
+            ), ProductsFilter::class, 'json'
         );
         $validatorService->validate($productsFilter, ['filter']);
         $paginator = $productsRepository->getProductsByFilter($productsFilter);
@@ -158,6 +204,28 @@ class ProductsApiController extends AbstractController
             data: ['data' => [
                 'path' => $product->getImg()
             ]]
+        );
+    }
+    /**
+     * Загрузка xml из 1С
+     *
+     * @OA\RequestBody(
+     *      @OA\MediaType(
+     *          mediaType="multipart/form-data",
+     *          @OA\Schema(
+     *              @OA\Property(property="xmlFile", type="file", description="Xml - файл"),
+     *          )
+     *     )
+     * )
+     */
+//    #[Route('/import/xml', name: 'import_products_xml', methods: ["POST"])]
+    public function importXML(
+        Request $request,
+
+    ): JsonResponse
+    {
+        return $this->json(
+            data: ['data' => []]
         );
     }
 }

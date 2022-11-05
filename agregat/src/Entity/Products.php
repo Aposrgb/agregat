@@ -73,8 +73,17 @@ class Products
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Basket::class)]
     private Collection $baskets;
 
-    #[ORM\ManyToOne(inversedBy: 'favoritesProducts')]
-    private ?User $favoriteUser = null;
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'favoritesProducts')]
+    private Collection $favoritesUser;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $code1C = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $balanceStock = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $purchaseBalance = null;
 
     public function __construct()
     {
@@ -285,14 +294,65 @@ class Products
         return $this;
     }
 
-    public function getFavoriteUser(): ?User
+    /** @return Collection<int, User> */
+    public function getFavoritesUser(): ?Collection
     {
-        return $this->favoriteUser;
+        return $this->favoritesUser;
     }
 
-    public function setFavoriteUser(?User $favoriteUser): self
+    public function addFavoritesUser(User $favoritesUser): self
     {
-        $this->favoriteUser = $favoriteUser;
+        if (!$this->favoritesUser->contains($favoritesUser)) {
+            $this->favoritesUser[] = $favoritesUser;
+        }
+        return $this;
+    }
+
+    public function removeFavoritesUser(User $favoritesUser): self
+    {
+        $this->favoritesUser->removeElement($favoritesUser);
+        return $this;
+    }
+
+    public function setFavoritesUser(?Collection $favoritesUser): self
+    {
+        $this->favoritesUser = $favoritesUser;
+
+        return $this;
+    }
+
+    public function getCode1C(): ?int
+    {
+        return $this->code1C;
+    }
+
+    public function setCode1C(?int $code1C): self
+    {
+        $this->code1C = $code1C;
+
+        return $this;
+    }
+
+    public function getBalanceStock(): ?int
+    {
+        return $this->balanceStock;
+    }
+
+    public function setBalanceStock(?int $balanceStock): self
+    {
+        $this->balanceStock = $balanceStock;
+
+        return $this;
+    }
+
+    public function getPurchaseBalance(): ?int
+    {
+        return $this->purchaseBalance;
+    }
+
+    public function setPurchaseBalance(?int $purchaseBalance): self
+    {
+        $this->purchaseBalance = $purchaseBalance;
 
         return $this;
     }
