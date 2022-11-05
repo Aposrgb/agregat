@@ -4,7 +4,6 @@ namespace App\Controller\Api;
 
 use App\Helper\Exception\ApiException;
 use App\Helper\Filter\ProductsFilter;
-use App\Repository\CategoriesRepository;
 use App\Repository\ProductsRepository;
 use App\Service\ProductsService;
 use App\Service\ValidatorService;
@@ -224,6 +223,7 @@ class ProductsApiController extends AbstractController
 
     ): JsonResponse
     {
+        $xmlFile = $request->files->get('xmlFile');
         return $this->json(
             data: ['data' => []]
         );
