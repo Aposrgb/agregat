@@ -1,3 +1,8 @@
+route1:
+    path: /{req}
+    defaults: { _controller: 'App\Controller\IndexController::index' }
+    requirements:
+        req: ".+"
 main:
     resource: '../src/Controller'
     type:     annotation
