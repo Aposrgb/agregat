@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Products;
 use App\Helper\Exception\ApiException;
 use App\Helper\Filter\ProductsFilter;
 use App\Repository\ProductsRepository;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 /**
  * @OA\Tag(name="Products")
@@ -205,6 +207,74 @@ class ProductsApiController extends AbstractController
             ]]
         );
     }
+    /**
+     * Детали продукта
+     *
+     * @OA\Response(
+     *     response="404",
+     *     description="Not found",
+     *     @OA\JsonContent(ref="#/components/schemas/ApiException")
+     * )
+     *
+     * @OA\Response(
+     *     response="200",
+     *     description="Success",
+     *     @OA\JsonContent(
+     *          @OA\Property(property="data", type="object",
+     *              ref=@Model(type="App\Entity\Products", groups={"get_products"})
+     *          )
+     *     )
+     * )
+     *
+     * @OA\Parameter(
+     *     name="product",
+     *     in="path",
+     *     description="id - product",
+     *     @OA\Schema(type="integer")
+     * )
+     */
+    #[Route('/{product<\d+>}', name: 'get_product', methods: ['GET'])]
+    public function getProduct(
+        Products $product,
+    ): JsonResponse
+    {
+        return $this->json(data: ['data' => $product], context: ['groups' => ['get_products']] );
+    }
+
+    /**
+     * Получение фильтров
+     *
+     * @OA\Response(
+     *     response="200",
+     *     description="Success",
+     *     @OA\JsonContent(
+     *         @OA\Property(property="data", type="object",
+     *             @OA\Property(property="maxPrice", type="integer"),
+     *             @OA\Property(property="minPrice", type="integer"),
+     *             @OA\Property(property="categories", type="array",
+     *                  @OA\Items(ref=@Model(type="App\Entity\Categories", groups={"get_filter"}))
+     *             )
+     *         )
+     *     )
+     * )
+     *
+     */
+    #[Route('/filter', name: 'get_filter', methods: ['GET'])]
+    public function getFilters(
+        ProductsRepository $productsRepository,
+        ProductsService $productsService
+    )
+    {
+        $products = $productsRepository->findAll();
+        $filter = $productsService->getFilterByProducts($products);
+
+        return $this->json(['data' => [
+            'maxPrice' => $filter->getMaxPrice(),
+            'minPrice' => $filter->getMinPrice(),
+            'categories' => $filter->getCategories()
+        ]],context: ['groups' => ['get_filter']]);
+    }
+
     /**
      * Загрузка xml из 1С
      *

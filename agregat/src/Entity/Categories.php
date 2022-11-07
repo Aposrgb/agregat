@@ -15,7 +15,7 @@ class Categories
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['get_products', 'get_categories'])]
+    #[Groups(['get_products', 'get_categories', 'get_filter'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -27,7 +27,7 @@ class Categories
     private ?string $img = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get_products', 'get_categories'])]
+    #[Groups(['get_products', 'get_categories', 'get_filter'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

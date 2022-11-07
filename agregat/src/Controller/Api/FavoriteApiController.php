@@ -2,15 +2,10 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Basket;
-use App\Entity\Products;
 use App\Entity\User;
-use App\Helper\DTO\BasketDTO;
 use App\Helper\Exception\ApiException;
 use App\Helper\Filter\ProductsFilter;
-use App\Repository\BasketRepository;
 use App\Repository\ProductsRepository;
-use App\Service\BasketService;
 use App\Service\FavoriteService;
 use App\Service\ProductsService;
 use App\Service\ValidatorService;

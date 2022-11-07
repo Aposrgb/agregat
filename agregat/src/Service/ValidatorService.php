@@ -74,6 +74,17 @@ class ValidatorService
         }
     }
 
+    public static function validateYearContext($object, ExecutionContextInterface $context): void
+    {
+        try {
+            if ($object) {
+                new DateTime($object . '-01-01');
+            }
+        } catch (\Exception) {
+            throw new ApiException(message: 'Невалидный год');
+        }
+    }
+
     public function validateMaxRangeInteger($object): void
     {
         if (!is_numeric($object)) {

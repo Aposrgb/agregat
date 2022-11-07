@@ -1,0 +1,6 @@
+insert into public.categories (id, is_popular, img, title, description)
+values  (1, true, '/upload/iblock/cd7/cd78a661e7058808a75f7b8cfc1eecb8.jpg', 'Домкраты', null),
+        (2, true, '/upload/iblock/cd7/cd78a661e7058808a75f7b8cfc1eecb8.jpg', 'Поршни', null),
+        (4, true, '/upload/iblock/cd7/cd78a661e7058808a75f7b8cfc1eecb8.jpg', 'Подвеска', null),
+        (5, true, '/upload/iblock/cd7/cd78a661e7058808a75f7b8cfc1eecb8.jpg', 'Рулевое управление', null),
+        (3, true, '/upload/iblock/cd7/cd78a661e7058808a75f7b8cfc1eecb8.jpg', 'Гидравлика', null);

@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\Categories;
 use App\Entity\Products;
 use App\Helper\Exception\ApiException;
+use App\Helper\Mapped\ProductFilter;
 use App\Repository\ProductsRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +25,26 @@ class ProductsService
         protected FileUploadService  $fileUploadService,
     )
     {
+    }
+
+    /**
+     * @param Products[] $products
+     */
+    public function getFilterByProducts(array $products): ProductFilter
+    {
+        $productFilter = new ProductFilter();
+        foreach ($products as $product) {
+            $category = $product->getCategories();
+            if ($category) {
+                $productFilter->addCategory($category);
+            }
+            $price = $product->getPrice();
+            if ($price) {
+                $productFilter->setMinPrice(min($price, $productFilter->getMinPrice()));
+                $productFilter->setMaxPrice(max($price, $productFilter->getMaxPrice()));
+            }
+        }
+        return $productFilter;
     }
 
     public function getProductById(string|int $id): Products
