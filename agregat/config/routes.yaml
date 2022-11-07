@@ -1,10 +1,10 @@
-route1:
-    path: /{req}
-    defaults: { _controller: 'App\Controller\IndexController::index' }
-    requirements:
-        req: ".+"
 main:
     resource: '../src/Controller'
+    type:     annotation
+    trailing_slash_on_root: false
+admin:
+    resource: '../src/Controller/Admin'
+    prefix:   /admin
     type:     annotation
     trailing_slash_on_root: false
 api:
@@ -17,3 +17,8 @@ app.swagger_ui:
     path: /{area}/doc
     methods: GET
     defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+route1:
+    path: /{req}
+    defaults: { _controller: 'App\Controller\IndexController::index' }
+    requirements:
+        req: ".+"
