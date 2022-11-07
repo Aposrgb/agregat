@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProductsService
 {
-    const PRODUCTS_FILE_PATH = "/uploads/products/img/";
+    const PRODUCTS_FILE_PATH = "/upload/products/img/";
 
     const AVAILABLE_IMAGE_EXTENSIONS = [
         'image/jpg',

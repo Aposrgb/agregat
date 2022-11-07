@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use function Webmozart\Assert\Tests\StaticAnalysis\nullOrKeyExists;
 
 #[ORM\Entity(repositoryClass: ProductsRepository::class)]
 class Products
@@ -28,33 +29,33 @@ class Products
 
     #[ORM\Column]
     #[Groups(['get_products', 'get_baskets'])]
-    private ?float $rating = null;
+    private ?float $rating = 0.0;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
     private ?string $description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
     private ?bool $isPopular = false;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
     private ?bool $isAvailable = false;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
     private ?bool $isRecommend = false;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
     private ?bool $isActual = false;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
     private ?bool $isNew = false;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['get_products'])]
     private ?\DateTimeInterface $createdAt;
 
@@ -62,7 +63,7 @@ class Products
     #[Groups(['get_products', 'get_baskets'])]
     private ?Categories $categories = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
     private ?float $price = null;
 
@@ -85,6 +86,10 @@ class Products
     #[ORM\Column(nullable: true)]
     private ?int $purchaseBalance = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['get_products', 'get_baskets'])]
+    private ?string $keyWords = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -94,6 +99,12 @@ class Products
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -354,6 +365,24 @@ class Products
     {
         $this->purchaseBalance = $purchaseBalance;
 
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getKeyWords(): ?string
+    {
+        return $this->keyWords;
+    }
+
+    /**
+     * @param string|null $keyWords
+     * @return Products
+     */
+    public function setKeyWords(?string $keyWords): Products
+    {
+        $this->keyWords = $keyWords;
         return $this;
     }
 
