@@ -1,9 +1,7 @@
 {% extends 'base.html.twig' %}
-<html>
-<head>
-    <meta content="text/html; charset=ISO-8859-15">
-    <title>Edit Products</title>
-</head>
+
+{% block title %}Edit Products{% endblock %}
+
 {% block body %}
     <h1>Edit Products</h1>
 
@@ -13,4 +11,3 @@
 
     {{ include('products/_delete_form.html.twig') }}
 {% endblock %}
-</html>
