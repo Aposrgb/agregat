@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}keyword{% endblock %}
+
+{% block body %}
+    <h1>keyword</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>KeyWords</th>
+                <td>{{ product.keyWords }}</td>
+            </tr>
+            <tr>
+                <th>id product</th>
+                <td>{{ product.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_keyword_index') }}">back to list</a>
+
+    <a href="{{ path('app_keyword_edit', {'id': product.id}) }}">edit</a>
+
+{% endblock %}

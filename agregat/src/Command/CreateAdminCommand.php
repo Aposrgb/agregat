@@ -42,33 +42,17 @@ class CreateAdminCommand extends Command
         $question = new Question(
             '<question>Please type username</question>: ',
         );
-        $user->setFirstname($helper->ask($input, $output, $question));
-
-        $question = new Question(
-            '<question>Please type surname</question>: ',
-        );
-        $user->setSurname($helper->ask($input, $output, $question));
-
-        $question = new Question(
-            '<question>Please type country</question>: ',
-        );
-        $user->setCountry($helper->ask($input, $output, $question));
-
-        $question = new Question(
-            '<question>Please type phone</question>: ',
-        );
-        $user->setPhone($helper->ask($input, $output, $question));
+        $user->setFirstName($helper->ask($input, $output, $question));
 
         $question = new Question(
             '<question>Please type email</question>: ',
         );
-        $user->setEmailAdminPanel($helper->ask($input, $output, $question));
+        $user->setEmail($helper->ask($input, $output, $question));
 
         $question = new Question(
             '<question>Please type password</question>: ',
         );
-        $password = $helper->ask($input, $output, $question);
-        $user->setAdminPanelPassword($this->hasher->hashPassword($user, $password));
+        $user->setPassword($this->hasher->hashPassword($user, $helper->ask($input, $output, $question)));
 
         $this->userRepository->add($user, true);
         return Command::SUCCESS;

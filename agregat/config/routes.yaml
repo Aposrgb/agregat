@@ -18,6 +18,11 @@ app.swagger_ui:
     methods: GET
     defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
 route1:
+    path: /admin
+    defaults: { _controller: 'App\Controller\Admin\IndexController::index' }
+    requirements:
+        req: ".+"
+route2:
     path: /{req}
     defaults: { _controller: 'App\Controller\IndexController::index' }
     requirements:

@@ -8,13 +8,21 @@ security:
         email_user_provider:
             entity:
                 class: App\Entity\User
-                property: id
+                property: email
     firewalls:
         api:
             lazy: true
             pattern: ^/api
             stateless: true
             custom_authenticator: App\Security\ApiAuthenticator
+        admin:
+            lazy: true
+            pattern: ^/admin
+            custom_authenticator: App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -32,6 +40,9 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/api/doc, roles: PUBLIC_ACCESS}
+         - { path: ^/admin/login, roles: PUBLIC_ACCESS}
+         - { path: ^/admin/logout, roles: PUBLIC_ACCESS}
+         - { path: ^/admin/*, roles: ROLE_ADMIN}
 #         - { path: ^/api/*, roles: ROLE_ADMIN }
 
 when@test:

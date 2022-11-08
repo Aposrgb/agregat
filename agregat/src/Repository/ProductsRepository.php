@@ -22,6 +22,14 @@ class ProductsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Products::class);
     }
+    
+    public function findByKeyword(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.keyWords is not null')
+            ->getQuery()
+            ->getResult();
+    }
 
     public function getProductWithIds(ProductsFilter $productsFilter, array $ids): Paginator
     {
