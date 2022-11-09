@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+
+    {{ form_row(form.firstname) }}
+    {{ form_row(form.surname) }}
+    {{ form_row(form.patronymic) }}
+    {{ form_row(form.phone) }}
+    {% if user.id %}
+        {{ form_row(form.roles, {'required' : false}) }}
+    {%  else %}
+        {{ form_row(form.roles, {'required' : true}) }}
+    {%  endif %}
+    {{ form_row(form.status) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.password) }}
+
+<button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+<script>
+
+
+</script>

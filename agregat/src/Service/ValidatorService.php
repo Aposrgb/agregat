@@ -159,6 +159,17 @@ class ValidatorService
         }
     }
 
+    public function validateUsersRoles($object): bool
+    {
+        $roles = UserRoles::getRoles();
+        foreach ($object as $role) {
+            if (!in_array($role, $roles)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static function validateUserRoles($object, ExecutionContextInterface $context): void
     {
         $roles = UserRoles::getRoles();

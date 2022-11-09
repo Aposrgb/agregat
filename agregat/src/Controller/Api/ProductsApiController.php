@@ -3,12 +3,10 @@
 namespace App\Controller\Api;
 
 use App\Entity\Products;
-use App\Helper\Exception\ApiException;
 use App\Helper\Filter\ProductsFilter;
 use App\Repository\ProductsRepository;
 use App\Service\ProductsService;
 use App\Service\ValidatorService;
-use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 /**
  * @OA\Tag(name="Products")
