@@ -20,8 +20,14 @@ class ProductsFilter
 
     private $isActual;
 
-    #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateArrayInteger'], groups: ['filter'])]
     private $categoryId;
+
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
+    private $minPrice;
+
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
+    private $maxPrice;
 
     public function __construct()
     {
@@ -144,6 +150,42 @@ class ProductsFilter
     public function setCategoryId($categoryId)
     {
         $this->categoryId = $categoryId;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMinPrice()
+    {
+        return $this->minPrice;
+    }
+
+    /**
+     * @param mixed $minPrice
+     * @return ProductsFilter
+     */
+    public function setMinPrice($minPrice)
+    {
+        $this->minPrice = $minPrice;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxPrice()
+    {
+        return $this->maxPrice;
+    }
+
+    /**
+     * @param mixed $maxPrice
+     * @return ProductsFilter
+     */
+    public function setMaxPrice($maxPrice)
+    {
+        $this->maxPrice = $maxPrice;
         return $this;
     }
 }

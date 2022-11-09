@@ -22,7 +22,7 @@ class ProductsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Products::class);
     }
-    
+
     public function findByKeyword(): array
     {
         return $this->createQueryBuilder('p')
@@ -48,8 +48,8 @@ class ProductsRepository extends ServiceEntityRepository
         if ($productsFilter->getCategoryId()) {
             $qb
                 ->join('p.categories', 'c')
-                ->andWhere('c.id = :id')
-                ->setParameter('id', $productsFilter->getCategoryId());
+                ->andWhere($qb->expr()->in('c.id', ':ids'))
+                ->setParameter('ids', explode(',', $productsFilter->getCategoryId()));
         }
         if ($productsFilter->getIsActual()) {
             $qb->andWhere('p.isActual = true');
@@ -65,6 +65,16 @@ class ProductsRepository extends ServiceEntityRepository
         }
         if ($productsFilter->getIsRecommend()) {
             $qb->andWhere('p.isRecommend = true');
+        }
+        if ($productsFilter->getMinPrice()) {
+            $qb
+                ->andWhere('p.price >= :minPrice')
+                ->setParameter('minPrice', $productsFilter->getMinPrice());
+        }
+        if ($productsFilter->getMaxPrice()) {
+            $qb
+                ->andWhere('p.price <= :maxPrice')
+                ->setParameter('maxPrice', $productsFilter->getMaxPrice());
         }
         return new Paginator($qb
             ->setFirstResult($productsFilter->getPagination()->getFirstMaxResult())

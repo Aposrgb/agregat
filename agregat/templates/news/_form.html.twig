@@ -1,4 +1,50 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_row(form.name) }}
+    {{ form_row(form.text) }}
+    {% if news.img %}
+        <div>
+            <img id="delete_news_img" src="{{ news.img }} " alt="Изображение новости" style="max-width: 250px;">
+            <input id="delete_news" value="Delete image" class="btn btn-danger font-weight-bold px-7 py-2 my-3"
+                   type="button"/>
+        </div>
+    {% else %}
+        {{ form_row(form.img) }}
+    {% endif %}
+<div hidden>
+    {{ form_rest(form) }}
+</div>
+
+<button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
+<script>
+    function deleteFile(block, name) {
+        const blocks = document.getElementById(block)
+        if (blocks != null) {
+            blocks.addEventListener('click', () => {
+                const isOk = confirm('Are you sure you want to delete the image?')
+                if (isOk) {
+                    fetch("{{ path('app_news_delete_files', { 'id':news.id}) }}?name=" + name, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-type': 'application/json'
+                        }
+                    });
+                    document.getElementById(block).remove()
+                    window.location = "{{ path('app_news_edit', { 'id': news.id}) }}"
+                    location.reload()
+                    document.getElementById(block + "_img").remove()
+                } else {
+                    return false
+                }
+            })
+        }
+    }
+
+    let id = {{ news.id ? news.id : "null" }};
+    if (id != null) {
+        deleteFile("delete_news", "img")
+    }
+
+
+</script>

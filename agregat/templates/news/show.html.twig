@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <th>Img</th>
-                <td>{{ news.img }}</td>
+                <td><img src="{{ news.img ?? '' }}" style="max-width: 350px;"/></td>
             </tr>
             <tr>
                 <th>CreatedAt</th>

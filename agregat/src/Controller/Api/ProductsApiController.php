@@ -44,6 +44,20 @@ class ProductsApiController extends AbstractController
      *
      * @OA\Parameter(
      *     in="query",
+     *     name="filter[minPrice]",
+     *     description="Мин. цена",
+     *     @OA\Schema(type="integer")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[maxPrice]",
+     *     description="Макс. цена",
+     *     @OA\Schema(type="integer")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
      *     name="filter[isActual]",
      *     description="Актуальность",
      *     @OA\Schema(type="boolean")
@@ -81,7 +95,8 @@ class ProductsApiController extends AbstractController
      *     in="query",
      *     name="search[categoryId]",
      *     description="id - категории",
-     *     @OA\Schema(type="integer")
+     *     example="1,2,3,4",
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Response(
@@ -138,75 +153,6 @@ class ProductsApiController extends AbstractController
         );
     }
 
-    /**
-     * Загрузка фото для продукта
-     *
-     * @OA\Response(
-     *     response="200",
-     *     description="Ok",
-     *     @OA\JsonContent(
-     *          @OA\Property(property="data",type="object",
-     *              @OA\Property(property="link", type="string")
-     *          )
-     *     )
-     * )
-     *
-     * @OA\RequestBody(
-     *     required=true,
-     *     @OA\MediaType(
-     *          mediaType="multipart/form-data",
-     *          @OA\Schema(
-     *              @OA\Property(property="image", type="file", description="Изображение jpg, png"),
-     *          )
-     *     )
-     * )
-     *
-     * @OA\Parameter(
-     *     in="path",
-     *     description="id - Продукта",
-     *     name="productId",
-     *     @OA\Schema(type="integer")
-     * )
-     *
-     * @OA\Response(
-     *     response="404",
-     *     description="Not found",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiException")
-     * )
-     *
-     * @OA\Response(
-     *     response="400",
-     *     description="Failed to delete image",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiException")
-     * )
-     */
-    #[Route('/{productId}/img', name: 'upload_img', methods: ["POST"])]
-    public function uploadImg(
-        string|int             $productId,
-        Request                $request,
-        ValidatorService       $validatorService,
-        EntityManagerInterface $entityManager,
-        ProductsService        $productsService,
-    ): JsonResponse
-    {
-        $validatorService->validateMaxRangeInteger($productId);
-        $product = $productsService->getProductById($productId);
-        $fileImage = $request->files->get('image');
-        if ($fileImage) {
-            $validatorService->validateImagesExtension(
-                [$fileImage], ProductsService::AVAILABLE_IMAGE_EXTENSIONS
-            );
-            $product = $productsService->uploadImg($product, $fileImage);
-        } else {
-            throw new ApiException(message: 'Нет изображения');
-        }
-        $entityManager->flush();
-        return $this->json(
-            data: ['data' => [
-                'path' => $product->getImg()
-            ]]
-        );
-    }
     /**
      * Детали продукта
      *
