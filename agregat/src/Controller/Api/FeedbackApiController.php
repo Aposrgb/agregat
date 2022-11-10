@@ -58,7 +58,7 @@ class FeedbackApiController extends AbstractController
             $request->getContent(), FeedbackDTO::class, 'json'
         );
         $validatorService->validate($feedbackDTO, ['create_feedback']);
-        $feedback = (new Feedbagick())
+        $feedback = (new Feedback())
             ->setEmail($feedbackDTO->getEmail())
             ->setName($feedbackDTO->getName())
             ->setPhone($feedbackDTO->getPhone())
