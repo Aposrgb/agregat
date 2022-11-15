@@ -31,8 +31,6 @@ final class Version20221115161406 extends AbstractMigration
         $this->addSql('delete from products');
         $this->addSql('delete from categories');
         $this->addSql(file_get_contents(__DIR__.'/data/insert_products_v2.txt'));
-        $this->addSql(file_get_contents(__DIR__.'/data/insert_category_v2.txt'));
-        $this->addSql(file_get_contents(__DIR__.'/data/insert_sub_categories.txt'));
     }
 
     public function down(Schema $schema): void
