@@ -1,0 +1,50 @@
+{{ form_start(form) }}
+    {% if sub_category.img %}
+        <div>
+            <img id="delete_category_img" src="{{ sub_category.img }} " alt="Изображение категории"
+                 style="max-width: 250px;">
+        </div>
+    {%  endif %}
+    {{ form_row(form.img, {'required': false}) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+<div>
+    {% if  sub_category.category %}
+        <label>Current category: {{ sub_category.category.title }}</label>
+    {% endif %}
+</div>
+<div>
+    <label for="sub_categories_categories">Category</label>
+    <select id="sub_categories_categories" {% if not sub_category.id %}required{% endif %} name="sub_categories[categories]">
+    </select>
+</div>
+<div hidden>
+    {{ form_rest(form) }}
+</div>
+<button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        let form = document.querySelector("form");
+        let categorys = await fetch('{{ path('get_category') }}?pagination[limit]=100').then(data => data.json()).then(data => data['data'])
+        let select = document.getElementById('sub_categories_categories')
+        form.addEventListener("submit", (e) => {
+            let inputCorpus = document.createElement("input");
+            inputCorpus.setAttribute("id", "sub_categories_categories");
+            inputCorpus.setAttribute("name", "sub_categories[categories]");
+            inputCorpus.setAttribute("value", select.value);
+            inputCorpus.setAttribute("type", "hidden");
+
+            form.appendChild(inputCorpus);
+            form.submit();
+        })
+        let html = '<option></option>'
+        let category
+        for (let i=0;i<categorys.length;i++) {
+            category = categorys[i]
+            html += `<option value="${category.id}">${category.title}</option>`
+        }
+        select.innerHTML = html
+    })
+</script>

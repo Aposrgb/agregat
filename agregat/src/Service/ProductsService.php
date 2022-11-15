@@ -38,6 +38,10 @@ class ProductsService
             if ($category) {
                 $productFilter->addCategory($category);
             }
+            $subCategories = $product->getSubCategories();
+            if ($subCategories) {
+                $productFilter->addSubCategory($subCategories);
+            }
             $price = $product->getPrice();
             if ($price) {
                 $productFilter->setMinPrice(min($price, $productFilter->getMinPrice()));

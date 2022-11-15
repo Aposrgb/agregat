@@ -96,6 +96,14 @@ class ProductsApiController extends AbstractController
      *     @OA\Schema(type="string")
      * )
      *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="search[subCategoryId]",
+     *     description="id - категории",
+     *     example="1,2,3,4",
+     *     @OA\Schema(type="string")
+     * )
+     *
      * @OA\Response(
      *     response="400",
      *     description="Not valid data",
@@ -120,10 +128,10 @@ class ProductsApiController extends AbstractController
      */
     #[Route('', name: 'get_products', methods: ['GET'])]
     public function getProducts(
-        Request              $request,
-        SerializerInterface  $serializer,
-        ValidatorService     $validatorService,
-        ProductsRepository   $productsRepository,
+        Request             $request,
+        SerializerInterface $serializer,
+        ValidatorService    $validatorService,
+        ProductsRepository  $productsRepository,
     ): JsonResponse
     {
         $query = $request->query->all();
@@ -181,7 +189,7 @@ class ProductsApiController extends AbstractController
         Products $product,
     ): JsonResponse
     {
-        return $this->json(data: ['data' => $product], context: ['groups' => ['get_products']] );
+        return $this->json(data: ['data' => $product], context: ['groups' => ['get_products']]);
     }
 
     /**
@@ -196,6 +204,9 @@ class ProductsApiController extends AbstractController
      *             @OA\Property(property="minPrice", type="integer"),
      *             @OA\Property(property="categories", type="array",
      *                  @OA\Items(ref=@Model(type="App\Entity\Categories", groups={"get_filter"}))
+     *             ),
+     *             @OA\Property(property="subCategories", type="array",
+     *                 @OA\Items(ref=@Model(type="App\Entity\SubCategories", groups={"get_filter"}))
      *             )
      *         )
      *     )
@@ -203,10 +214,7 @@ class ProductsApiController extends AbstractController
      *
      */
     #[Route('/filter', name: 'get_filter', methods: ['GET'])]
-    public function getFilters(
-        ProductsRepository $productsRepository,
-        ProductsService $productsService
-    )
+    public function getFilters(ProductsRepository $productsRepository, ProductsService $productsService): JsonResponse
     {
         $products = $productsRepository->findAll();
         $filter = $productsService->getFilterByProducts($products);
@@ -214,8 +222,9 @@ class ProductsApiController extends AbstractController
         return $this->json(['data' => [
             'maxPrice' => $filter->getMaxPrice(),
             'minPrice' => $filter->getMinPrice(),
-            'categories' => $filter->getCategories()
-        ]],context: ['groups' => ['get_filter']]);
+            'categories' => $filter->getCategories(),
+            'subCategory' => $filter->getSubCategories()
+        ]], context: ['groups' => ['get_filter']]);
     }
 
     /**

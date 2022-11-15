@@ -6,6 +6,8 @@ class ProductFilter
 {
     private array $categories = [];
 
+    private array $subCategories = [];
+
     private ?int $minPrice = 40000;
 
     private ?int $maxPrice = 0;
@@ -69,6 +71,32 @@ class ProductFilter
     public function setMaxPrice(?int $maxPrice): ProductFilter
     {
         $this->maxPrice = $maxPrice;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSubCategories(): array
+    {
+        return $this->subCategories;
+    }
+
+    /**
+     * @param array $subCategories
+     * @return ProductFilter
+     */
+    public function setSubCategories(array $subCategories): ProductFilter
+    {
+        $this->subCategories = $subCategories;
+        return $this;
+    }
+
+    public function addSubCategory($category): self
+    {
+        if (!in_array($category, $this->subCategories)) {
+            $this->subCategories[] = $category;
+        }
         return $this;
     }
 }

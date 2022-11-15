@@ -51,6 +51,12 @@ class ProductsRepository extends ServiceEntityRepository
                 ->andWhere($qb->expr()->in('c.id', ':ids'))
                 ->setParameter('ids', explode(',', $productsFilter->getCategoryId()));
         }
+        if ($productsFilter->getSubCategoryId()) {
+            $qb
+                ->join('p.subCategories', 'sc')
+                ->andWhere($qb->expr()->in('sc.id', ':ids'))
+                ->setParameter('ids', explode(',', $productsFilter->getSubCategoryId()));
+        }
         if ($productsFilter->getIsActual()) {
             $qb->andWhere('p.isActual = true');
         }

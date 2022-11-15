@@ -90,6 +90,9 @@ class Products
     #[Groups(['get_products', 'get_baskets'])]
     private ?string $keyWords = null;
 
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    private ?SubCategories $subCategories = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -383,6 +386,18 @@ class Products
     public function setKeyWords(?string $keyWords): Products
     {
         $this->keyWords = $keyWords;
+        return $this;
+    }
+
+    public function getSubCategories(): ?SubCategories
+    {
+        return $this->subCategories;
+    }
+
+    public function setSubCategories(?SubCategories $subCategories): self
+    {
+        $this->subCategories = $subCategories;
+
         return $this;
     }
 

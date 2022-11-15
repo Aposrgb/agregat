@@ -23,6 +23,9 @@ class ProductsFilter
     #[Assert\Callback(callback: [ValidatorService::class, 'validateArrayInteger'], groups: ['filter'])]
     private $categoryId;
 
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateArrayInteger'], groups: ['filter'])]
+    private $subCategoryId;
+
     #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
     private $minPrice;
 
@@ -186,6 +189,24 @@ class ProductsFilter
     public function setMaxPrice($maxPrice)
     {
         $this->maxPrice = $maxPrice;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubCategoryId()
+    {
+        return $this->subCategoryId;
+    }
+
+    /**
+     * @param mixed $subCategoryId
+     * @return ProductsFilter
+     */
+    public function setSubCategoryId($subCategoryId)
+    {
+        $this->subCategoryId = $subCategoryId;
         return $this;
     }
 }
