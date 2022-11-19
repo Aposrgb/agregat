@@ -212,12 +212,61 @@ class ProductsApiController extends AbstractController
      *     )
      * )
      *
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isActual]",
+     *     description="Актуальность",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isRecommend]",
+     *     description="Рекомендованный",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isAvailable]",
+     *     description="Доступный",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isPopular]",
+     *     description="Популярный",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[isNew]",
+     *     description="Новый",
+     *     @OA\Schema(type="boolean")
+     * )
+     *
      */
     #[Route('/filter', name: 'get_filter', methods: ['GET'])]
-    public function getFilters(ProductsRepository $productsRepository, ProductsService $productsService): JsonResponse
+    public function getFilters(
+        Request             $request,
+        SerializerInterface $serializer,
+        ValidatorService    $validatorService,
+        ProductsRepository $productsRepository,
+        ProductsService $productsService): JsonResponse
     {
+        $query = $request->query->all();
+        /** @var ProductsFilter $productsFilter */
+        $productsFilter = $serializer->deserialize(
+            json_encode(
+                array_merge($query['filter'] ?? [])
+            ), ProductsFilter::class, 'json'
+        );
+        $validatorService->validate($productsFilter, ['filter']);
         $products = $productsRepository->findAll();
-        $filter = $productsService->getFilterByProducts($products);
+        $filter = $productsService->getFilterByProducts($products, $productsFilter);
 
         return $this->json(['data' => [
             'maxPrice' => $filter->getMaxPrice(),

@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Categories;
 use App\Entity\Products;
 use App\Helper\Exception\ApiException;
+use App\Helper\Filter\ProductsFilter;
 use App\Helper\Mapped\ProductFilter;
 use App\Repository\ProductsRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -30,9 +31,28 @@ class ProductsService
     /**
      * @param Products[] $products
      */
-    public function getFilterByProducts(array $products): ProductFilter
+    public function getFilterByProducts(array $products, ProductsFilter $productsFilter): ProductFilter
     {
         $productFilter = new ProductFilter();
+        $products = array_filter($products, function (Products $product) use ($productsFilter) {
+            $isFilter = true;
+            if ($productsFilter->getIsActual()) {
+                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
+            }
+            if ($isFilter && $productsFilter->getIsAvailable()) {
+                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
+            }
+            if ($isFilter && $productsFilter->getIsNew()) {
+                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
+            }
+            if ($isFilter && $productsFilter->getIsPopular()) {
+                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
+            }
+            if ($isFilter && $productsFilter->getIsRecommend()) {
+                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
+            }
+            return $isFilter;
+        });
         foreach ($products as $product) {
             $category = $product->getCategories();
             if ($category) {

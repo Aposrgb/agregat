@@ -8,7 +8,7 @@ class ProductFilter
 
     private array $subCategories = [];
 
-    private ?int $minPrice = 40000;
+    private ?int $minPrice = 0;
 
     private ?int $maxPrice = 0;
 
