@@ -8,7 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use function Webmozart\Assert\Tests\StaticAnalysis\nullOrKeyExists;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use OpenApi\Annotations as OA;
 
 #[ORM\Entity(repositoryClass: ProductsRepository::class)]
 class Products
@@ -93,10 +94,25 @@ class Products
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?SubCategories $subCategories = null;
 
+    /**
+     * @OA\Property(type="array",
+     *      @OA\Items(
+     *          @OA\Property(property="id", type="integer"),
+     *          @OA\Property(property="name", type="string")
+     *      )
+     * )
+     */
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private ?array $bundle = [];
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comments::class)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->baskets = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -399,6 +415,60 @@ class Products
         $this->subCategories = $subCategories;
 
         return $this;
+    }
+
+    public function getBundle(): ?array
+    {
+        return $this->bundle;
+    }
+
+    public function setBundle(?array $bundle): self
+    {
+        $this->bundle = $bundle;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comments>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getProduct() === $this) {
+                $comment->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    #[SerializedName(serializedName: 'rating')]
+    #[Groups(['get_products', 'get_baskets'])]
+    public function getAverageRating(): ?int
+    {
+        $count = $this->comments->count();
+        $rating = 0;
+        foreach ($this->comments as $comment) {
+            $rating += $comment->getRating();
+        }
+        return $count > 0 ? $rating / $count : 0;
     }
 
 }

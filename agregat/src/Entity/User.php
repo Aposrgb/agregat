@@ -57,6 +57,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Products::class, mappedBy: 'favoriteUser')]
     private Collection $favoritesProducts;
 
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Comments::class)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->devices = new ArrayCollection();
@@ -64,6 +67,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->dateRegistration = new \DateTime();
         $this->status = UserStatus::CONFIRMED->value;
         $this->favoritesProducts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -329,6 +333,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFavoritesProduct(Products $favoritesProduct): self
     {
         $this->favoritesProducts->removeElement($favoritesProduct);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comments>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getOwner() === $this) {
+                $comment->setOwner(null);
+            }
+        }
 
         return $this;
     }
