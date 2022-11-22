@@ -158,4 +158,11 @@ class Categories
 
         return $this;
     }
+    
+    #[Groups(['get_categories'])]
+    public function getCountProducts(): int
+    {
+        return $this->products->count();
+    }
+
 }
