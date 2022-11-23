@@ -6,7 +6,6 @@ alter sequence sub_categories_id_seq restart with 31;
 alter sequence categories_id_seq restart with 29;
 alter sequence news_id_seq restart with 6;
 
-
 insert into texts values (1, null,
                           'г. Екатеринбург, улица Посадская, 16а, корпус И, помещение И-101 620102', 1, 1);
 insert into texts values (2, null,
