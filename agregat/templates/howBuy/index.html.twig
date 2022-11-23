@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Texts index{% endblock %}
+
+{% block body %}
+    <h1>Как купить</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>SubType</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for text in texts %}
+            <tr>
+                <td>{{ text.id }}</td>
+                <td>{{ text.title }}</td>
+                <td>{{ text.description }}</td>
+                <td>{{ text.getSubTypeName() }}</td>
+                <td>
+                    <a href="{{ path('app_texts_show_how_buy', {'id': text.id}) }}">show</a>
+                    <a href="{{ path('app_texts_edit_how_buy', {'id': text.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_texts_new_how_buy') }}">Create new</a>
+{% endblock %}
