@@ -17,11 +17,11 @@ class Products
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['get_products', 'get_basket', 'get_baskets'])]
+    #[Groups(['get_products', 'get_basket', 'get_baskets', 'get_comments'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_baskets', 'get_comments'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]

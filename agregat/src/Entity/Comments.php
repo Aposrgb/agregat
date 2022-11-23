@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CommentsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CommentsRepository::class)]
 class Comments
@@ -12,21 +13,27 @@ class Comments
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['get_comments'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['get_comments'])]
     private ?string $text = null;
 
     #[ORM\Column]
+    #[Groups(['get_comments'])]
     private ?int $rating = null;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
+    #[Groups(['get_comments'])]
     private array $images = [];
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[Groups(['get_comments'])]
     private ?User $owner = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[Groups(['get_comments'])]
     private ?Products $product = null;
 
     public function getId(): ?int
