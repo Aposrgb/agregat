@@ -62,34 +62,6 @@ class ProductsApiController extends AbstractController
      *
      * @OA\Parameter(
      *     in="query",
-     *     name="filter[isRecommend]",
-     *     description="Рекомендованный",
-     *     @OA\Schema(type="boolean")
-     * )
-     *
-     * @OA\Parameter(
-     *     in="query",
-     *     name="filter[isAvailable]",
-     *     description="Доступный",
-     *     @OA\Schema(type="boolean")
-     * )
-     *
-     * @OA\Parameter(
-     *     in="query",
-     *     name="filter[isPopular]",
-     *     description="Популярный",
-     *     @OA\Schema(type="boolean")
-     * )
-     *
-     * @OA\Parameter(
-     *     in="query",
-     *     name="filter[isNew]",
-     *     description="Новый",
-     *     @OA\Schema(type="boolean")
-     * )
-     *
-     * @OA\Parameter(
-     *     in="query",
      *     name="search[categoryId]",
      *     description="id - категории",
      *     example="1,2,3,4",
@@ -101,6 +73,13 @@ class ProductsApiController extends AbstractController
      *     name="search[subCategoryId]",
      *     description="id - категории",
      *     example="1,2,3,4",
+     *     @OA\Schema(type="string")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="search[name]",
+     *     description="поиск по имени",
      *     @OA\Schema(type="string")
      * )
      *
@@ -220,42 +199,14 @@ class ProductsApiController extends AbstractController
      *     @OA\Schema(type="boolean")
      * )
      *
-     * @OA\Parameter(
-     *     in="query",
-     *     name="filter[isRecommend]",
-     *     description="Рекомендованный",
-     *     @OA\Schema(type="boolean")
-     * )
-     *
-     * @OA\Parameter(
-     *     in="query",
-     *     name="filter[isAvailable]",
-     *     description="Доступный",
-     *     @OA\Schema(type="boolean")
-     * )
-     *
-     * @OA\Parameter(
-     *     in="query",
-     *     name="filter[isPopular]",
-     *     description="Популярный",
-     *     @OA\Schema(type="boolean")
-     * )
-     *
-     * @OA\Parameter(
-     *     in="query",
-     *     name="filter[isNew]",
-     *     description="Новый",
-     *     @OA\Schema(type="boolean")
-     * )
-     *
      */
     #[Route('/filter', name: 'get_filter', methods: ['GET'])]
     public function getFilters(
         Request             $request,
         SerializerInterface $serializer,
         ValidatorService    $validatorService,
-        ProductsRepository $productsRepository,
-        ProductsService $productsService): JsonResponse
+        ProductsRepository  $productsRepository,
+        ProductsService     $productsService): JsonResponse
     {
         $query = $request->query->all();
         /** @var ProductsFilter $productsFilter */

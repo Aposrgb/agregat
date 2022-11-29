@@ -39,18 +39,6 @@ class ProductsService
             if ($productsFilter->getIsActual()) {
                 $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
             }
-            if ($isFilter && $productsFilter->getIsAvailable()) {
-                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
-            }
-            if ($isFilter && $productsFilter->getIsNew()) {
-                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
-            }
-            if ($isFilter && $productsFilter->getIsPopular()) {
-                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
-            }
-            if ($isFilter && $productsFilter->getIsRecommend()) {
-                $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
-            }
             return $isFilter;
         });
         foreach ($products as $product) {

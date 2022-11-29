@@ -10,14 +10,6 @@ class ProductsFilter
     #[Assert\Valid(groups: ['filter'])]
     private ?PaginationFilter $pagination;
 
-    private $isNew;
-
-    private $isPopular;
-
-    private $isAvailable;
-
-    private $isRecommend;
-
     private $isActual;
 
     #[Assert\Callback(callback: [ValidatorService::class, 'validateArrayInteger'], groups: ['filter'])]
@@ -32,6 +24,8 @@ class ProductsFilter
     #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
     private $maxPrice;
 
+    private $name;
+
     public function __construct()
     {
         $this->pagination = new PaginationFilter();
@@ -45,78 +39,6 @@ class ProductsFilter
     public function setPagination(PaginationFilter $pagination): self
     {
         $this->pagination = $pagination;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsNew(): ?bool
-    {
-        return $this->isNew;
-    }
-
-    /**
-     * @param mixed $isNew
-     * @return ProductsFilter
-     */
-    public function setIsNew(string $isNew): self
-    {
-        $this->isNew = $isNew == "true";
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsPopular(): ?bool
-    {
-        return $this->isPopular;
-    }
-
-    /**
-     * @param mixed $isPopular
-     * @return ProductsFilter
-     */
-    public function setIsPopular(string $isPopular): self
-    {
-        $this->isPopular = $isPopular == "true";
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsAvailable(): ?bool
-    {
-        return $this->isAvailable;
-    }
-
-    /**
-     * @param mixed $isAvailable
-     * @return ProductsFilter
-     */
-    public function setIsAvailable(string $isAvailable): self
-    {
-        $this->isAvailable = $isAvailable == "true";
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsRecommend(): ?bool
-    {
-        return $this->isRecommend;
-    }
-
-    /**
-     * @param mixed $isRecommend
-     * @return ProductsFilter
-     */
-    public function setIsRecommend(string $isRecommend): self
-    {
-        $this->isRecommend = $isRecommend == "true";
         return $this;
     }
 
@@ -209,4 +131,23 @@ class ProductsFilter
         $this->subCategoryId = $subCategoryId;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     * @return ProductsFilter
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
 }

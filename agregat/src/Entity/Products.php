@@ -38,23 +38,7 @@ class Products
 
     #[ORM\Column(nullable: true)]
     #[Groups(['get_products', 'get_baskets'])]
-    private ?bool $isPopular = false;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
-    private ?bool $isAvailable = false;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
-    private ?bool $isRecommend = false;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
     private ?bool $isActual = false;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
-    private ?bool $isNew = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['get_products'])]
@@ -113,6 +97,7 @@ class Products
         $this->createdAt = new \DateTime();
         $this->baskets = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->favoritesUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -174,42 +159,6 @@ class Products
         return $this;
     }
 
-    public function isIsPopular(): ?bool
-    {
-        return $this->isPopular;
-    }
-
-    public function setIsPopular(bool $isPopular): self
-    {
-        $this->isPopular = $isPopular;
-
-        return $this;
-    }
-
-    public function isIsAvailable(): ?bool
-    {
-        return $this->isAvailable;
-    }
-
-    public function setIsAvailable(bool $isAvailable): self
-    {
-        $this->isAvailable = $isAvailable;
-
-        return $this;
-    }
-
-    public function isIsRecommend(): ?bool
-    {
-        return $this->isRecommend;
-    }
-
-    public function setIsRecommend(bool $isRecommend): self
-    {
-        $this->isRecommend = $isRecommend;
-
-        return $this;
-    }
-
     public function isIsActual(): ?bool
     {
         return $this->isActual;
@@ -218,18 +167,6 @@ class Products
     public function setIsActual(bool $isActual): self
     {
         $this->isActual = $isActual;
-
-        return $this;
-    }
-
-    public function isIsNew(): ?bool
-    {
-        return $this->isNew;
-    }
-
-    public function setIsNew(bool $isNew): self
-    {
-        $this->isNew = $isNew;
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Products;
 use App\Helper\Filter\ProductsFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -42,9 +43,29 @@ class ProductsRepository extends ServiceEntityRepository
         );
     }
 
+    private function searchByName(QueryBuilder $qb, ?string $searchValue): void
+    {
+        $searchValue = preg_replace('/\s+/', ' ', $searchValue);
+        if ($searchValue != ' ' && $searchValue != '') {
+            $searchValue = explode(' ', trim($searchValue));
+            $parameterForWhere = $qb->expr()->andX();
+            foreach ($searchValue as $index => $word) {
+                $parameterForWhere->add($qb->expr()->orX(
+                    $qb->expr()->like('LOWER(p.title)', ':search' . $index),
+                ));
+                $qb->setParameter('search' . $index, "%" . mb_strtolower($word) . "%");
+            }
+            $qb->andWhere($parameterForWhere);
+        }
+    }
+
+
     public function getProductsByFilter(ProductsFilter $productsFilter): Paginator
     {
         $qb = $this->createQueryBuilder('p');
+        if($productsFilter->getName()){
+            $this->searchByName($qb, $productsFilter->getName());
+        }
         if ($productsFilter->getCategoryId()) {
             $qb
                 ->join('p.categories', 'c')
@@ -59,18 +80,6 @@ class ProductsRepository extends ServiceEntityRepository
         }
         if ($productsFilter->getIsActual()) {
             $qb->andWhere('p.isActual = true');
-        }
-        if ($productsFilter->getIsAvailable()) {
-            $qb->andWhere('p.isAvailable = true');
-        }
-        if ($productsFilter->getIsNew()) {
-            $qb->andWhere('p.isNew = true');
-        }
-        if ($productsFilter->getIsPopular()) {
-            $qb->andWhere('p.isPopular = true');
-        }
-        if ($productsFilter->getIsRecommend()) {
-            $qb->andWhere('p.isRecommend = true');
         }
         if ($productsFilter->getMinPrice()) {
             $qb

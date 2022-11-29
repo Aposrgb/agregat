@@ -18,25 +18,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get_basket', 'get_baskets', 'get_comments'])]
+    #[Groups(['get_basket', 'get_baskets', 'get_comments', 'get_profile'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
     private ?string $surname = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['get_profile'])]
     private ?\DateTimeInterface $dateRegistration;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
     private ?string $firstname = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
     private ?string $patronymic = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
     private ?string $email = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: 'simple_array')]
@@ -54,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Basket::class)]
     private Collection $baskets;
 
-    #[ORM\ManyToMany(targetEntity: Products::class, mappedBy: 'favoriteUser')]
+    #[ORM\ManyToMany(targetEntity: Products::class, mappedBy: 'favoritesUser')]
     private Collection $favoritesProducts;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Comments::class)]
@@ -325,6 +331,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->favoritesProducts->contains($favoritesProduct)) {
             $this->favoritesProducts[] = $favoritesProduct;
+            $favoritesProduct->addFavoritesUser($this);
         }
 
         return $this;
@@ -333,6 +340,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFavoritesProduct(Products $favoritesProduct): self
     {
         $this->favoritesProducts->removeElement($favoritesProduct);
+        $favoritesProduct->removeFavoritesUser($this);
 
         return $this;
     }

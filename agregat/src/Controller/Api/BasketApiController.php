@@ -225,10 +225,10 @@ class BasketApiController extends AbstractController
         $basketDTO = $serializer->deserialize($request->getContent(), BasketDTO::class, 'json');
         $validatorService->validate($basketDTO, ['edit_count']);
         $basket = $basketService->getBasketByUserAndProduct($this->getUser(), $product);
-        $basket->setCount($basketDTO->getCount());
+        $basket?->setCount($basketDTO->getCount());
         $entityManager->flush();
         return $this->json(
-            data: ['data' => $basket],
+            data: ['data' => $basket ?? null],
             status: Response::HTTP_OK,
             context: ['groups' => ['get_basket']]
         );
