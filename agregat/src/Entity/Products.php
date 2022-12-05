@@ -92,6 +92,9 @@ class Products
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comments::class)]
     private Collection $comments;
 
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'products')]
+    private ?Brand $brand = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -406,6 +409,18 @@ class Products
             $rating += $comment->getRating();
         }
         return $count > 0 ? $rating / $count : 0;
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): self
+    {
+        $this->brand = $brand;
+
+        return $this;
     }
 
 }
