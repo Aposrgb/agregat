@@ -1,57 +1,52 @@
 <?php
 
-namespace App\Command;
+namespace App\Service;
 
 use App\Entity\Brand;
 use App\Entity\Products;
 use App\Repository\BrandRepository;
+use App\Repository\ProductsRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class ImportProductsFromCSV extends Command
+class ImportService
 {
     public function __construct(
         protected ParameterBagInterface  $parameterBag,
         protected BrandRepository        $brandRepository,
         protected EntityManagerInterface $entityManager,
+        protected ProductsRepository     $productsRepository
     )
     {
-        parent::__construct();
     }
 
-    protected function configure()
+    public function importProductsFromCSV(UploadedFile $data): void
     {
-        $this
-            ->setName('import:product:csv');
-    }
-
-    /**
-     * 0 => '',
-     * 1 => 'Ценовая группа/ Номенклатура',
-     * 2 => 'Остаток',
-     * 3 => 'Номенклатура.Код',
-     * 4 => 'Номенклатура.Артикул',
-     * 5 => 'Номенклатура.Бренд',
-     * 6 => 'Интернет',
-     * 7 => '',
-     * 8 => 'Основная цена продажи',
-     * 9 => ''
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $data = file_get_contents($this->parameterBag->get('APP_DIRECTORY') . '/data/products.csv');
+        $data = $data->getContent();
         $data = str_getcsv($data, "\n");
         $brands = $this->brandRepository->findAll();
         $brandNames = array_map(function (Brand $brand) {
             return $brand->getName();
         }, $brands);
+        $products = $this->productsRepository->findAll();
+        $productNames = array_map(function (Products $products) {
+            return $products->getTitle();
+        }, $products);
         $i = 12;
         for ($i; $i < count($data); $i++) {
-            $product = new Products();
             $csv = str_getcsv($data[$i], ';');
+            if ($indexName = array_search($csv[1], $productNames)) {
+                $product = $products[$indexName];
+            } else {
+                $description =
+                    "Номенклатура.Код: " . ($csv[3] ?? '-') . "\n" .
+                    "Номенклатура.Артикул: " . ($csv[4] ?? '-') . "\n";
+
+                $product = (new Products())
+                    ->setBalanceStock($this->parsePriceInteger($csv[2]))
+                    ->setDescription($description);
+            }
             if ($csv[5] != '' && !empty($csv[5])) {
                 if ($index = array_search($csv[5], $brandNames)) {
                     $product->setBrand($brands[$index]);
@@ -59,21 +54,10 @@ class ImportProductsFromCSV extends Command
                     $product->setBrand((new Brand())->setName($csv[5]));
                 }
             }
-            $description =
-                "Номенклатура.Код: " . ($csv[3] ?? '-') . "\n" .
-                "Номенклатура.Артикул: " . ($csv[4] ?? '-') . "\n" .
-                "Интернет: " . ($csv[6] ?? '-') . "\n";
 
-            $this->entityManager->persist(
-                $product
-                    ->setPrice($this->parsePriceFloat($csv[8]))
-                    ->setTitle($csv[1])
-                    ->setBalanceStock($this->parsePriceInteger($csv[2]))
-                    ->setDescription($description)
-            );
+            $this->entityManager->persist($product->setPrice($this->parsePriceFloat($csv[6])));
         }
         $this->entityManager->flush();
-        return Command::SUCCESS;
     }
 
     private function parsePriceInteger(string $value): ?int
@@ -103,5 +87,4 @@ class ImportProductsFromCSV extends Command
         }
         return null;
     }
-
 }

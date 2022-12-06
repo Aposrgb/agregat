@@ -52,9 +52,10 @@ class ValidatorService
     {
         foreach ($files as $file) {
             if ($file) {
+                var_export($file->getMimeType());
                 if (!in_array($file->getMimeType(), $extensions)) {
                     throw new ApiException(
-                        message: 'Не поддерживаемый формат изображения (поддерживается '
+                        message: 'Не поддерживаемый формат файла (поддерживается '
                         . join(',', $extensions) .
                         ')',
                     );

@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+{% endblock %}
+
+{% block body %}
+    <div id="main_form" style="display: flex; height: 60vh; border-radius: 2vh; background: #dfdfdf; width: 40vw; flex-direction: column; justify-content: center; margin: auto; align-items: center; margin-top: 3vh;">
+        <div>Импорт CSV продуктов в систему</div>
+        <br>
+        <label style="background: #7e7e7e8c; border-radius: 0.5vh;" for="product">Выберите файл csv</label>
+        <p id="name_file"></p>
+        <p id="error" style="color:red;"></p>
+        <p id="success" style="color: #43c543;"></p>
+        <div style=" margin-bottom: 3vh;display: none" class="btnLoader">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <input hidden type="file" id="product"/>
+        <button style="display: none" id="sender">
+            Отправить
+        </button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('product').addEventListener('change', () => {
+                document.getElementById('sender').style.display = 'block'
+                document.getElementById('name_file').innerText = document.getElementById('product').files[0].name
+            })
+            document.getElementById('sender').onclick = async () => {
+                let input = document.getElementById('product')
+                let data = new FormData()
+                data.append('file', input.files[0])
+                document.getElementById('success').innerText = ''
+                document.getElementById('error').innerText = ''
+                document.querySelector('.btnLoader').style.display = ''
+                try {
+                    data = await fetch('{{ path('upload_product_csv') }}', {
+                        method: 'POST',
+                        body: data
+                    })
+                    if (data.status >= 400 && data.status < 500) {
+                        data = await data.json()
+                        document.getElementById('error').innerText = data['message']
+                    } else if (data.status >= 500) {
+                        data = await data.json()
+                        console.log(data)
+                        document.getElementById('error').innerText = 'Ошибка сервера'
+                    } else {
+                        document.getElementById('success').innerText = 'Успешно'
+                    }
+                } catch (ex) {
+                    console.log(ex)
+                }
+                document.querySelector('.btnLoader').style.display = 'none'
+            }
+        })
+    </script>
+    <style>
+        .btnLoader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            background-color: inherit;
+            width: 100%;
+        }
+
+        .btnLoader span {
+            --dot1: #788c9f;
+            --dot2: #788c9f33;
+            --dot3: #788c9f66;
+            --dot4: #788c9fb3;
+            --duration: 700ms;
+            --easing: linear;
+            --delay: 1ms;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .btnLoader span:nth-child(1) {
+            background-color: var(--dot1);
+            animation: var(--duration) var(--easing) var(--delay) infinite alternate flash1;
+        }
+
+        .btnLoader span:nth-child(2) {
+            background-color: var(--dot2);
+            animation: var(--duration) var(--easing) var(--delay) infinite alternate flash2;
+        }
+
+        .btnLoader span:nth-child(3) {
+            background-color: var(--dot3);
+            animation: var(--duration) var(--easing) var(--delay) infinite alternate flash3;
+        }
+
+        .btnLoader span:nth-child(4) {
+            background-color: var(--dot4);
+            animation: var(--duration) var(--easing) var(--delay) infinite alternate flash4;
+        }
+
+        @keyframes flash1 {
+            0%, 100% {
+                background-color: var(--dot1)
+            }
+            25% {
+                background-color: var(--dot2)
+            }
+            50% {
+                background-color: var(--dot3)
+            }
+            75% {
+                background-color: var(--dot4)
+            }
+        }
+
+        @keyframes flash2 {
+            0%, 100% {
+                background-color: var(--dot2)
+            }
+            25% {
+                background-color: var(--dot3)
+            }
+            50% {
+                background-color: var(--dot4)
+            }
+            75% {
+                background-color: var(--dot1)
+            }
+        }
+
+        @keyframes flash3 {
+            0%, 100% {
+                background-color: var(--dot3)
+            }
+            25% {
+                background-color: var(--dot4)
+            }
+            50% {
+                background-color: var(--dot1)
+            }
+            75% {
+                background-color: var(--dot2)
+            }
+        }
+
+        @keyframes flash4 {
+            0%, 100% {
+                background-color: var(--dot4)
+            }
+            25% {
+                background-color: var(--dot1)
+            }
+            50% {
+                background-color: var(--dot2)
+            }
+            75% {
+                background-color: var(--dot3)
+            }
+        }
+
+    </style>
+
+{% endblock %}

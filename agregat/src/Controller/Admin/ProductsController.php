@@ -13,6 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/products')]
 class ProductsController extends AbstractController
 {
+    #[Route('/upload', name: 'app_products_upload', methods: ['GET'])]
+    public function uploadProducts(): Response
+    {
+        return $this->render('upload/upload_products.html.twig');
+    }
+
     #[Route('/', name: 'app_products_index', methods: ['GET'])]
     public function index(ProductsRepository $productsRepository): Response
     {
