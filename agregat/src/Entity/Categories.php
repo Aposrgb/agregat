@@ -20,7 +20,7 @@ class Categories
 
     #[ORM\Column]
     #[Groups(['get_products', 'get_categories'])]
-    private ?bool $isPopular = null;
+    private ?bool $isPopular = false;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['get_products', 'get_categories'])]

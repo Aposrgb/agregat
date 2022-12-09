@@ -63,7 +63,7 @@ class Products
     private Collection $favoritesUser;
 
     #[ORM\Column(nullable: true)]
-    private ?int $code1C = null;
+    private ?string $code1C = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $balanceStock = null;
@@ -291,12 +291,12 @@ class Products
         return $this;
     }
 
-    public function getCode1C(): ?int
+    public function getCode1C(): ?string
     {
         return $this->code1C;
     }
 
-    public function setCode1C(?int $code1C): self
+    public function setCode1C(?string $code1C): self
     {
         $this->code1C = $code1C;
 
