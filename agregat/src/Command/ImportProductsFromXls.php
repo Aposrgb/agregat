@@ -124,7 +124,6 @@ class ImportProductsFromXls extends Command
 
     private function product(string $path, Categories $categories, ?SubCategories $subCategories = null): void
     {
-        echo $path."\n";
         $spreadsheet = IOFactory::load($path);
         $spreadsheet = $spreadsheet->getActiveSheet();
         $data = $spreadsheet->toArray();
