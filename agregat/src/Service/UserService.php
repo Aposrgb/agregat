@@ -9,6 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserService
 {
+    const PATH_PHOTO = "/upload/user/photo/";
+
+    const AVAILABLE_IMAGE_EXTENSIONS = [
+        'image/jpg',
+        'image/jpeg',
+        'image/png',
+    ];
+
     public function __construct(
         protected UserRepository $userRepository,
     )

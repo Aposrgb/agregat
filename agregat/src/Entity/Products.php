@@ -17,15 +17,15 @@ class Products
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['get_products', 'get_basket', 'get_baskets', 'get_comments'])]
+    #[Groups(['get_products', 'get_basket', 'get_baskets', 'get_comments', 'get_purchase_user'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['get_products', 'get_baskets', 'get_comments'])]
+    #[Groups(['get_products', 'get_baskets', 'get_comments', 'get_purchase_user'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_baskets', 'get_purchase_user'])]
     private ?string $img = null;
 
     #[ORM\Column]
@@ -95,12 +95,16 @@ class Products
     #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'products')]
     private ?Brand $brand = null;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Purchase::class)]
+    private Collection $purchases;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->baskets = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->favoritesUser = new ArrayCollection();
+        $this->purchases = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -419,6 +423,36 @@ class Products
     public function setBrand(?Brand $brand): self
     {
         $this->brand = $brand;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Purchase>
+     */
+    public function getPurchases(): Collection
+    {
+        return $this->purchases;
+    }
+
+    public function addPurchase(Purchase $purchase): self
+    {
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases->add($purchase);
+            $purchase->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchase(Purchase $purchase): self
+    {
+        if ($this->purchases->removeElement($purchase)) {
+            // set the owning side to null (unless already changed)
+            if ($purchase->getProduct() === $this) {
+                $purchase->setProduct(null);
+            }
+        }
 
         return $this;
     }

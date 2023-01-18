@@ -6,6 +6,7 @@ use App\Helper\EnumStatus\UserStatus;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,11 +19,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get_basket', 'get_baskets', 'get_comments', 'get_profile'])]
+    #[Groups(['get_basket', 'get_baskets', 'get_comments', 'get_profile', 'get_purchase_user'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['get_profile'])]
+    #[Groups(['get_profile', 'get_purchase_user'])]
     private ?string $surname = null;
 
     #[ORM\Column(type: 'datetime')]
@@ -30,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $dateRegistration;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['get_profile'])]
+    #[Groups(['get_profile', 'get_purchase_user'])]
     private ?string $firstname = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -42,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['get_profile'])]
+    #[Groups(['get_profile', 'get_purchase_user'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: 'simple_array')]
@@ -66,6 +67,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Comments::class)]
     private Collection $comments;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['get_profile'])]
+    private ?\DateTimeInterface $dateBirth = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
+    private ?string $country = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
+    private ?string $city = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
+    private ?string $locality = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
+    private ?string $index = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['get_profile'])]
+    private ?string $address = null;
+
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Purchase::class)]
+    private Collection $purchases;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['get_profile', 'get_purchase_user'])]
+    private ?string $photo = null;
+
     public function __construct()
     {
         $this->devices = new ArrayCollection();
@@ -74,6 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->status = UserStatus::CONFIRMED->value;
         $this->favoritesProducts = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->purchases = new ArrayCollection();
     }
 
     /**
@@ -371,6 +404,120 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $comment->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDateBirth(): ?\DateTimeInterface
+    {
+        return $this->dateBirth;
+    }
+
+    public function setDateBirth(?\DateTimeInterface $dateBirth): self
+    {
+        $this->dateBirth = $dateBirth;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getLocality(): ?string
+    {
+        return $this->locality;
+    }
+
+    public function setLocality(?string $locality): self
+    {
+        $this->locality = $locality;
+
+        return $this;
+    }
+
+    public function getIndex(): ?string
+    {
+        return $this->index;
+    }
+
+    public function setIndex(?string $index): self
+    {
+        $this->index = $index;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Purchase>
+     */
+    public function getPurchases(): Collection
+    {
+        return $this->purchases;
+    }
+
+    public function addPurchase(Purchase $purchase): self
+    {
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases->add($purchase);
+            $purchase->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchase(Purchase $purchase): self
+    {
+        if ($this->purchases->removeElement($purchase)) {
+            // set the owning side to null (unless already changed)
+            if ($purchase->getOwner() === $this) {
+                $purchase->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }

@@ -28,7 +28,13 @@ class UserMapper implements MapperInterface
             ->setPatronymic($this->helperService->getActualValue($entity->getPatronymic(), $dto->getPatronymic()))
             ->setPhone($this->helperService->getActualValue($entity->getPhone(), $dto->getPhone()))
             ->setEmail($this->helperService->getActualValue($entity->getEmail(), $dto->getEmail()))
-            ->setSurname($this->helperService->getActualValue($entity->getSurname(), $dto->getSurname()));
+            ->setSurname($this->helperService->getActualValue($entity->getSurname(), $dto->getSurname()))
+            ->setCountry($this->helperService->getActualValue($entity->getCountry(), $dto->getCountry()))
+            ->setCity($this->helperService->getActualValue($entity->getCity(), $dto->getCity()))
+            ->setLocality($this->helperService->getActualValue($entity->getLocality(), $dto->getLocality()))
+            ->setIndex($this->helperService->getActualValue($entity->getIndex(), $dto->getIndex()))
+            ->setAddress($this->helperService->getActualValue($entity->getAddress(), $dto->getAddress()))
+            ->setDateBirth($this->helperService->getActualValueDate($entity->getDateBirth(), $dto->getDateBirth()));
     }
 
     public function entityToDTO($entity)
