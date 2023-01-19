@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Helper\EnumStatus\DeliveryStatus;
 use App\Helper\EnumStatus\PurchaseStatus;
+use App\Helper\EnumType\PurchaseAddressType;
 use App\Repository\PurchaseRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,9 +31,9 @@ class Purchase
     #[Groups(['get_purchase_user'])]
     private ?\DateTimeInterface $dateArrive = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(nullable: true)]
     #[Groups(['get_purchase_user'])]
-    private ?string $deliveryService = null;
+    private ?int $deliveryService = null;
 
     #[ORM\ManyToOne(inversedBy: 'purchases')]
     #[Groups(['get_purchase_user'])]
@@ -54,7 +55,7 @@ class Purchase
     #[Groups(['get_purchase_user'])]
     private ?int $deliveryStatus = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['get_purchase_user'])]
     private ?string $deliveryAddress = null;
 
@@ -116,12 +117,12 @@ class Purchase
         return $this;
     }
 
-    public function getDeliveryService(): ?string
+    public function getDeliveryService(): ?int
     {
         return $this->deliveryService;
     }
 
-    public function setDeliveryService(?string $deliveryService): self
+    public function setDeliveryService(?int $deliveryService): self
     {
         $this->deliveryService = $deliveryService;
 
@@ -193,7 +194,7 @@ class Purchase
         return $this->deliveryAddress;
     }
 
-    public function setDeliveryAddress(string $deliveryAddress): self
+    public function setDeliveryAddress(?string $deliveryAddress): self
     {
         $this->deliveryAddress = $deliveryAddress;
 
@@ -210,6 +211,12 @@ class Purchase
     public function getDeliveryStatusName(): ?string
     {
         return DeliveryStatus::tryFrom($this->deliveryStatus)?->getTypeName();
+    }
+
+    #[Groups(['get_purchase_user'])]
+    public function getDeliveryServiceName(): ?string
+    {
+        return PurchaseAddressType::tryFrom($this->deliveryService)?->getTypeName();
     }
 
     public function getName(): ?string

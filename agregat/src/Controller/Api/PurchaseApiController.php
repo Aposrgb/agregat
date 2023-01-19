@@ -3,11 +3,17 @@
 namespace App\Controller\Api;
 
 use App\Entity\Products;
+use App\Entity\Purchase;
+use App\Helper\DTO\ProductDTO;
 use App\Helper\DTO\PurchaseDTO;
+use App\Helper\EnumStatus\DeliveryStatus;
+use App\Helper\EnumStatus\PurchaseStatus;
+use App\Helper\Exception\ApiException;
 use App\Helper\Filter\PurchaseFilter;
 use App\Repository\PurchaseRepository;
 use App\Service\PurchaseService;
 use App\Service\ValidatorService;
+use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -51,16 +57,9 @@ class PurchaseApiController extends AbstractController
      *     )
      * )
      *
-     * @OA\Parameter(
-     *     name="product",
-     *     in="path",
-     *     description="id - product",
-     *     @OA\Schema(type="integer")
-     * )
      */
-    #[Route('/{product<\d+>}', name: 'create_purchase', methods: ['POST'])]
+    #[Route('', name: 'create_purchase', methods: ['POST'])]
     public function addPurchase(
-        Products            $product,
         Request             $request,
         SerializerInterface $serializer,
         ValidatorService    $validatorService,
@@ -73,10 +72,19 @@ class PurchaseApiController extends AbstractController
             PurchaseDTO::class,
             'json'
         );
+        $products = [];
+        foreach ($purchaseDTO->getProducts() as $product) {
+            $products[] = $serializer->deserialize(
+                json_encode($product),
+                ProductDTO::class,
+                'json'
+            );
+        }
+        $purchaseDTO->setProducts($products);
         $validatorService->validate($purchaseDTO, ['create_purchase']);
 
         return $this->json(
-            data: ['data' => $purchaseService->createPurchase($product, $purchaseDTO, $this->getUser())],
+            data: ['data' => $purchaseService->createPurchase($purchaseDTO, $this->getUser())],
             status: Response::HTTP_CREATED,
             context: ['groups' => ['get_purchase']]
         );
@@ -137,6 +145,44 @@ class PurchaseApiController extends AbstractController
                 "currentPage" => (int)$purchaseFilter->getPagination()->getPage()
             ],
             context: ['groups' => ['get_purchase_user']]
+        );
+    }
+
+    /**
+     * Отмена покупки
+     *
+     * @OA\Response(
+     *     response="204",
+     *     description="Success"
+     * )
+     *
+     * @OA\Parameter(
+     *     in="path",
+     *     required=true,
+     *     name="purchase",
+     *     @OA\Schema(type="integer")
+     * )
+     *
+     */
+    #[Route('/{purchase<\d+>}', name: 'cancel_purchase', methods: ['PATCH'])]
+    public function cancelPurchase(
+        Purchase               $purchase,
+        EntityManagerInterface $entityManager
+    ): JsonResponse
+    {
+        if ($purchase->getOwner() !== $this->getUser()) {
+            throw new ApiException(message: 'Покупка не найдена', status: Response::HTTP_NOT_FOUND);
+        }
+        if ($purchase->getStatus() == PurchaseStatus::CANCELLED->value) {
+            throw new ApiException(message: 'Покупка была отменена ранее');
+        }
+        $purchase
+            ->setStatus(PurchaseStatus::CANCELLED->value)
+            ->setDeliveryStatus(DeliveryStatus::CLOSED->value);
+        $entityManager->flush();
+        return $this->json(
+            data: [],
+            status: Response::HTTP_NO_CONTENT
         );
     }
 }

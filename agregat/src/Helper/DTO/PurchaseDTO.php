@@ -2,18 +2,20 @@
 
 namespace App\Helper\DTO;
 
+use App\Helper\EnumType\PurchaseAddressType;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PurchaseDTO
 {
-    /** @OA\Property(type="integer", description="Кол-во продуктов") */
+    /** @OA\Property(type="array", @OA\Items(ref=@Model(type="App\Helper\DTO\ProductDTO", groups={"create_purchase"}))) */
     #[Groups(['create_purchase'])]
-    #[Assert\Positive(groups: ['create_purchase'])]
+    #[Assert\Valid(groups: ['create_purchase'])]
     #[Assert\NotBlank(groups: ['create_purchase'])]
-    #[Assert\Type(type: 'integer', groups: ['create_purchase'])]
-    private $count = null;
+    #[Assert\Type(type: 'array', groups: ['create_purchase'])]
+    private array $products = [];
 
     /** @OA\Property(type="string", description="Имя") */
     #[Groups(['create_purchase'])]
@@ -35,20 +37,15 @@ class PurchaseDTO
 
     /** @OA\Property(type="string", description="Адрес") */
     #[Groups(['create_purchase'])]
-    #[Assert\NotBlank(groups: ['create_purchase'])]
     #[Assert\Type(type: 'string', groups: ['create_purchase'])]
     private $address = null;
 
-    public function getCount(): mixed
-    {
-        return $this->count;
-    }
-
-    public function setCount($count): self
-    {
-        $this->count = $count;
-        return $this;
-    }
+    /** @OA\Property(type="integer", description="Тип доставки - 1 - Пункт Агрегат ЕКБ, 2 - Почта России, 3 - Самовывоз, 4 - Доставка") */
+    #[Groups(['create_purchase'])]
+    #[Assert\NotBlank(groups: ['create_purchase'])]
+    #[Assert\Choice(callback: [PurchaseAddressType::class, 'getTypes'], groups: ['create_purchase'])]
+    #[Assert\Type(type: 'integer', groups: ['create_purchase'])]
+    private $deliveryService = null;
 
     /**
      * @return null
@@ -119,6 +116,42 @@ class PurchaseDTO
     public function setAddress($address)
     {
         $this->address = $address;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProducts(): array
+    {
+        return $this->products;
+    }
+
+    /**
+     * @param array $products
+     * @return PurchaseDTO
+     */
+    public function setProducts(array $products): PurchaseDTO
+    {
+        $this->products = $products;
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getDeliveryService()
+    {
+        return $this->deliveryService;
+    }
+
+    /**
+     * @param null $deliveryService
+     * @return PurchaseDTO
+     */
+    public function setDeliveryService($deliveryService)
+    {
+        $this->deliveryService = $deliveryService;
         return $this;
     }
 

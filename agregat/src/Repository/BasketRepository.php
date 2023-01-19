@@ -21,6 +21,19 @@ class BasketRepository extends ServiceEntityRepository
         parent::__construct($registry, Basket::class);
     }
 
+    public function deleteBasketByUserProducts(int $userId, array $productIds): void
+    {
+        $qb = $this->createQueryBuilder('b');
+        $qb
+            ->delete()
+            ->where('b.owner = :userId')
+            ->setParameter('userId', $userId)
+            ->andWhere($qb->expr()->in('b.product', ':productIds'))
+            ->setParameter('productIds', implode(',', $productIds))
+            ->getQuery()
+            ->execute();
+    }
+
     public function save(Basket $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

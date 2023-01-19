@@ -5,40 +5,61 @@ namespace App\Service;
 use App\Entity\Products;
 use App\Entity\Purchase;
 use App\Entity\User;
+use App\Helper\DTO\ProductDTO;
 use App\Helper\DTO\PurchaseDTO;
 use App\Helper\EnumStatus\DeliveryStatus;
 use App\Helper\EnumStatus\PurchaseStatus;
-use App\Helper\EnumType\PurchaseAddressType;
 use App\Helper\Exception\ApiException;
+use App\Repository\BasketRepository;
+use App\Repository\ProductsRepository;
 use App\Repository\PurchaseRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class PurchaseService
 {
     public function __construct(
-        protected PurchaseRepository $purchaseRepository
+        protected PurchaseRepository     $purchaseRepository,
+        protected ProductsRepository     $productsRepository,
+        protected EntityManagerInterface $entityManager,
+        protected BasketRepository       $basketRepository,
     )
     {
     }
 
-    public function createPurchase(Products $products, PurchaseDTO $purchaseDTO, User $user): Purchase
+    public function createPurchase(PurchaseDTO $purchaseDTO, User $user): void
     {
-        if (!$user->getAddress()) {
-            throw new ApiException(message: 'У пользователя нет адреса для доставки');
+        $productIds = array_map(function (ProductDTO $productDTO) {
+            return $productDTO->getProductId();
+        }, $purchaseDTO->getProducts());
+        $products = $this->productsRepository->findBy([
+            'id' => $productIds
+        ]);
+        if (count($productIds) != count($products)) {
+            throw new ApiException(message: 'Не найден продукт', status: Response::HTTP_NOT_FOUND);
         }
-        $purchase = (new Purchase())
-            ->setStatus(PurchaseStatus::PURCHASED->value)
-            ->setDeliveryStatus(DeliveryStatus::IN_PROCESS->value)
-            ->setOwner($user)
-            ->setPrice($purchaseDTO->getCount() * $products->getPrice())
-            ->setCount($purchaseDTO->getCount())
-            ->setProduct($products)
-            ->setPhone($purchaseDTO->getPhone())
-            ->setName($purchaseDTO->getName())
-            ->setSurname($purchaseDTO->getSurname())
-            ->setDeliveryService(PurchaseAddressType::POST_RUSSIA->value)
-            ->setDeliveryAddress($purchaseDTO->getAddress());
+        /** @var ProductDTO $productDTO */
+        foreach ($purchaseDTO->getProducts() as $productDTO) {
+            foreach ($products as $product) {
+                if ($product->getId() == $productDTO->getProductId()) {
+                    $purchase = (new Purchase())
+                        ->setStatus(PurchaseStatus::PURCHASED->value)
+                        ->setDeliveryStatus(DeliveryStatus::IN_PROCESS->value)
+                        ->setOwner($user)
+                        ->setPrice($productDTO->getCount() * $product->getPrice())
+                        ->setCount($productDTO->getCount())
+                        ->setProduct($product)
+                        ->setPhone($purchaseDTO->getPhone())
+                        ->setName($purchaseDTO->getName())
+                        ->setSurname($purchaseDTO->getSurname())
+                        ->setDeliveryService($purchaseDTO->getDeliveryService())
+                        ->setDeliveryAddress($purchaseDTO->getAddress());
 
-        $this->purchaseRepository->save($purchase, true);
-        return $purchase;
+                    $this->purchaseRepository->save($purchase);
+                }
+            }
+        }
+        $this->basketRepository->deleteBasketByUserProducts($user->getId(), $productIds);
+        $this->entityManager->flush();
     }
 }
