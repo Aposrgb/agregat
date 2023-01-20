@@ -112,7 +112,7 @@ class PurchaseApiController extends AbstractController
      *     description="Success",
      *     @OA\JsonContent(
      *         @OA\Property(property="data",type="object",
-     *              ref=@Model(type="App\Entity\Purchase", groups={"get_purchase_user"})
+     *              @OA\Items(ref=@Model(type="App\Entity\Purchase", groups={"get_purchase_user"}))
      *          ),
      *          @OA\Property(property="count", type="integer"),
      *          @OA\Property(property="pageCount", type="integer"),
