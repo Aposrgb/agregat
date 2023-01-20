@@ -82,11 +82,10 @@ class PurchaseApiController extends AbstractController
         }
         $purchaseDTO->setProducts($products);
         $validatorService->validate($purchaseDTO, ['create_purchase']);
-
+        $purchaseService->createPurchase($purchaseDTO, $this->getUser());
         return $this->json(
-            data: ['data' => $purchaseService->createPurchase($purchaseDTO, $this->getUser())],
-            status: Response::HTTP_CREATED,
-            context: ['groups' => ['get_purchase']]
+            data: [],
+            status: Response::HTTP_NO_CONTENT
         );
     }
 

@@ -29,7 +29,7 @@ class BasketRepository extends ServiceEntityRepository
             ->where('b.owner = :userId')
             ->setParameter('userId', $userId)
             ->andWhere($qb->expr()->in('b.product', ':productIds'))
-            ->setParameter('productIds', implode(',', $productIds))
+            ->setParameter('productIds', $productIds )
             ->getQuery()
             ->execute();
     }
