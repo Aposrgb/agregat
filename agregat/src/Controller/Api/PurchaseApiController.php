@@ -48,13 +48,8 @@ class PurchaseApiController extends AbstractController
      * )
      *
      * @OA\Response(
-     *     response="201",
-     *     description="Success",
-     *     @OA\JsonContent(
-     *         @OA\Property(property="data", type="object",
-     *             ref=@Model(type="App\Entity\Purchase", groups={"get_purchase"})
-     *         )
-     *     )
+     *     response="204",
+     *     description="Success"
      * )
      *
      */

@@ -35,7 +35,7 @@ class SubCategoriesController extends AbstractController
             $categoryId = $form->get('categories')->getData();
             if ($categoryId) {
                 $category = $categoriesRepository->find($categoryId);
-                if($category){
+                if ($category) {
                     $subCategory->setCategory($category);
                 } else {
                     return $this->renderForm('sub_categories/new.html.twig', [
@@ -51,6 +51,9 @@ class SubCategoriesController extends AbstractController
             }
             $img = $request->files->get('sub_categories')['img'] ?? null;
             if ($img) {
+                if ($subCategory->getImg()) {
+                    $fileUploadService->deleteFile($subCategory->getImg());
+                }
                 $subCategory->setImg(
                     $fileUploadService->upload($img, SubCategoryService::PATH_TO_IMAGE)
                 );
@@ -84,12 +87,15 @@ class SubCategoriesController extends AbstractController
             $categoryId = $form->get('categories')->getData();
             if ($categoryId) {
                 $category = $categoriesRepository->find($categoryId);
-                if($category){
+                if ($category) {
                     $subCategory->setCategory($category);
                 }
             }
             $img = $request->files->get('sub_categories')['img'] ?? null;
             if ($img) {
+                if ($subCategory->getImg()) {
+                    $fileUploadService->deleteFile($subCategory->getImg());
+                }
                 $subCategory->setImg(
                     $fileUploadService->upload($img, SubCategoryService::PATH_TO_IMAGE)
                 );

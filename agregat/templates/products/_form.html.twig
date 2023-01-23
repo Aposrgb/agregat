@@ -1,4 +1,21 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_row(form.title) }}
+    {% if product.img %}
+    <div>
+        <img id="delete_category_img" src="{{ product.img }} " alt="Изображение"
+             style="max-width: 250px;">
+    </div>
+    {%  endif %}
+    {{ form_row(form.img, {'required': false}) }}
+    {{ form_row(form.rating) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.isActual) }}
+    {{ form_row(form.createdAt) }}
+    {{ form_row(form.price) }}
+    {{ form_row(form.discountPrice) }}
+    {{ form_row(form.code1C) }}
+    {{ form_row(form.balanceStock) }}
+    {{ form_row(form.purchaseBalance) }}
+    {{ form_row(form.keyWords) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

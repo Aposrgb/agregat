@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\SubCategories;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,7 +16,9 @@ class SubCategoriesType extends AbstractType
         $builder
             ->add('img', FileType::class, ['mapped' => false])
             ->add('title')
-            ->add('description')
+            ->add('description', TextareaType::class, [
+                'attr' => ['style' => 'width:500px']
+            ])
             ->add('categories', null, ['mapped' => false]);
     }
 

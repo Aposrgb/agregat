@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Categories;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,7 +17,9 @@ class CategoriesType extends AbstractType
             ->add('isPopular')
             ->add('img', FileType::class, ['mapped'=> false])
             ->add('title')
-            ->add('description')
+            ->add('description', TextareaType::class, [
+                'attr' => ['style' => 'width:500px']
+            ])
         ;
     }
 

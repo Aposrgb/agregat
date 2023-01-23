@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\Products;
 use App\Form\ProductsType;
 use App\Repository\ProductsRepository;
+use App\Service\FileUploadService;
+use App\Service\ProductsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,13 +30,22 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/new', name: 'app_products_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ProductsRepository $productsRepository): Response
+    public function new(Request $request, ProductsRepository $productsRepository, FileUploadService $fileUploadService): Response
     {
         $product = new Products();
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $img = $request->files->get('products')['img'] ?? null;
+            if ($img) {
+                if ($product->getImg()) {
+                    $fileUploadService->deleteFile($product->getImg());
+                }
+                $product->setImg(
+                    $fileUploadService->upload($img, ProductsService::PRODUCTS_FILE_PATH)
+                );
+            }
             $productsRepository->save($product, true);
 
             return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
@@ -55,12 +66,21 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_products_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Products $product, ProductsRepository $productsRepository): Response
+    public function edit(Request $request, Products $product, ProductsRepository $productsRepository, FileUploadService $fileUploadService): Response
     {
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $img = $request->files->get('products')['img'] ?? null;
+            if ($img) {
+                if ($product->getImg()) {
+                    $fileUploadService->deleteFile($product->getImg());
+                }
+                $product->setImg(
+                    $fileUploadService->upload($img, ProductsService::PRODUCTS_FILE_PATH)
+                );
+            }
             $productsRepository->save($product, true);
 
             return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
@@ -75,7 +95,7 @@ class ProductsController extends AbstractController
     #[Route('/{id}', name: 'app_products_delete', methods: ['POST'])]
     public function delete(Request $request, Products $product, ProductsRepository $productsRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $product->getId(), $request->request->get('_token'))) {
             $productsRepository->remove($product, true);
         }
 
