@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Products;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,9 +27,11 @@ class ProductsType extends AbstractType
             ->add('isActual')
             ->add('createdAt')
             ->add('price')
+            ->add('balanceStock', NumberType::class, [
+                'attr' => ['min' => 1]
+            ])
             ->add('discountPrice')
             ->add('code1C')
-            ->add('balanceStock')
             ->add('purchaseBalance')
             ->add('keyWords')
         ;

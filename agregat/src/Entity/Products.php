@@ -66,6 +66,7 @@ class Products
     private ?string $code1C = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['get_products', 'get_baskets'])]
     private ?int $balanceStock = null;
 
     #[ORM\Column(nullable: true)]

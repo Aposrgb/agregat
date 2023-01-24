@@ -12,6 +12,7 @@
                 <th>Img</th>
                 <th>Rating</th>
                 <th>Price</th>
+                <th>BalanceStock</th>
                 <th>KeyWords</th>
                 <th>actions</th>
             </tr>
@@ -24,6 +25,7 @@
                 <td>{{ product.img }}</td>
                 <td>{{ product.rating }}</td>
                 <td>{{ product.price }}</td>
+                <td>{{ product.balanceStock }}</td>
                 <td>{{ product.keyWords }}</td>
                 <td>
                     <a href="{{ path('app_products_show', {'id': product.id}) }}">show</a>
