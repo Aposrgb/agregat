@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Список настроек{% endblock %}
+
+{% block body %}
+    <h1>Список настроек</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Идентификатор</th>
+                <th>Получатель рассылки</th>
+                <th>Тип настройки</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for setting in settings %}
+            <tr>
+                <td>{{ setting.id }}</td>
+                <td>{{ setting.senderTo }}</td>
+                <td>{{ setting.typeName }}</td>
+                <td>
+                    <a href="{{ path('app_settings_show', {'id': setting.id}) }}">Показать</a>
+                    <a href="{{ path('app_settings_edit', {'id': setting.id}) }}">Редактировать</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Не найдено записей</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

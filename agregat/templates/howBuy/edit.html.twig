@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Texts{% endblock %}
+{% block title %}Редактирование Текстов{% endblock %}
 
 {% block body %}
-    <h1>Edit Texts</h1>
+    <h1>Редактирование Текстов</h1>
 
-    {{ include('howBuy/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('howBuy/_form.html.twig', {'button_label': 'Обновить'}) }}
 
-    <a href="{{ path('app_texts_index_how_buy') }}">back to list</a>
+    <a href="{{ path('app_texts_index_how_buy') }}">Вернуться к списку</a>
 
     {{ include('howBuy/_delete_form.html.twig') }}
 {% endblock %}

@@ -1,7 +1,7 @@
 {{ form_start(form) }}
     {% if sub_category.img %}
         <div>
-            <img id="delete_category_img" src="{{ sub_category.img }} " alt="����������� ���������"
+            <img id="delete_category_img" src="{{ sub_category.img }} " alt="Изображение категории"
                  style="max-width: 250px;">
         </div>
     {%  endif %}
@@ -10,18 +10,18 @@
     {{ form_row(form.description) }}
 <div>
     {% if  sub_category.category %}
-        <label>Current category: {{ sub_category.category.title }}</label>
+        <label>Текущая категория: {{ sub_category.category.title }}</label>
     {% endif %}
 </div>
 <div>
-    <label for="sub_categories_categories">Category</label>
+    <label for="sub_categories_categories">Категория</label>
     <select id="sub_categories_categories" {% if not sub_category.id %}required{% endif %} name="sub_categories[categories]">
     </select>
 </div>
 <div hidden>
     {{ form_rest(form) }}
 </div>
-<button class="btn">{{ button_label|default('Save') }}</button>
+<button class="btn btn-success">{{ button_label|default('Сохранить') }}</button>
 {{ form_end(form) }}
 
 <script>

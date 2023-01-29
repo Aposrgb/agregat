@@ -23,6 +23,7 @@ class PurchaseService
         protected ProductsRepository     $productsRepository,
         protected EntityManagerInterface $entityManager,
         protected BasketRepository       $basketRepository,
+        protected MailerService          $mailerService,
     )
     {
     }
@@ -38,6 +39,7 @@ class PurchaseService
         if (count($productIds) != count($products)) {
             throw new ApiException(message: 'Не найден продукт', status: Response::HTTP_NOT_FOUND);
         }
+        $purchases = [];
         /** @var ProductDTO $productDTO */
         foreach ($purchaseDTO->getProducts() as $productDTO) {
             foreach ($products as $product) {
@@ -56,10 +58,15 @@ class PurchaseService
                         ->setDeliveryAddress($purchaseDTO->getAddress());
 
                     $this->purchaseRepository->save($purchase);
+                    $purchases[] = $purchase;
                 }
             }
         }
         $this->basketRepository->deleteBasketByUserProducts($user->getId(), $productIds);
         $this->entityManager->flush();
+        $this->mailerService->sendMailTemplate('mail/mailer.html.twig', 'Поступил Заказ на АгрегатЕКБ', context: [
+            'purchases' => $purchases,
+            'user' => $user
+        ]);
     }
 }

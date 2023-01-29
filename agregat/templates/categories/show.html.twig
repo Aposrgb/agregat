@@ -1,38 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Categories{% endblock %}
+{% block title %}Категория{% endblock %}
 
 {% block body %}
-    <h1>Categories</h1>
+    <h1>Категория</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>Идентификатор</th>
                 <td>{{ category.id }}</td>
             </tr>
             <tr>
-                <th>IsPopular</th>
-                <td>{{ category.isPopular ? 'Yes' : 'No' }}</td>
+                <th>Является популярным</th>
+                <td>{{ category.isPopular ? 'Да' : 'Нет' }}</td>
             </tr>
             <tr>
-                <th>Img</th>
+                <th>Изображение</th>
                 <td><img src="{{ category.img ?? '' }}" style="max-width: 350px;"/></td>
             </tr>
             <tr>
-                <th>Title</th>
+                <th>Название</th>
                 <td>{{ category.title }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>Описание</th>
                 <td>{{ category.description }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_categories_index') }}">back to list</a>
+    <a href="{{ path('app_categories_index') }}">Вернуться к списку</a>
 
-    <a href="{{ path('app_categories_edit', {'id': category.id}) }}">edit</a>
+    <a href="{{ path('app_categories_edit', {'id': category.id}) }}">Редактировать</a>
 
     {{ include('categories/_delete_form.html.twig') }}
 {% endblock %}

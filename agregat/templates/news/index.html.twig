@@ -1,19 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}News index{% endblock %}
+{% block title %}Список новостей{% endblock %}
 
 {% block body %}
-    <h1>News index</h1>
+    <h1>Список новостей</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Text</th>
-                <th>Img</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
+                <th>Идентификатор</th>
+                <th>Название</th>
+                <th>Текст</th>
+                <th>Изображение</th>
+                <th>Дата создания</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
@@ -25,17 +25,17 @@
                 <td><img src="{{ news.img ?? '' }}" style="max-width: 350px;"/></td>
                 <td>{{ news.createdAt ? news.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_news_show', {'id': news.id}) }}">show</a>
-                    <a href="{{ path('app_news_edit', {'id': news.id}) }}">edit</a>
+                    <a href="{{ path('app_news_show', {'id': news.id}) }}">Посмотреть</a>
+                    <a href="{{ path('app_news_edit', {'id': news.id}) }}">Редактировать</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="6">Не найдено записей</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_news_new') }}">Create new</a>
+    <a href="{{ path('app_news_new') }}">Добавить</a>
 {% endblock %}

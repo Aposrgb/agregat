@@ -14,12 +14,10 @@ class SubCategoriesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('img', FileType::class, ['mapped' => false])
-            ->add('title')
-            ->add('description', TextareaType::class, [
-                'attr' => ['style' => 'width:500px']
-            ])
-            ->add('categories', null, ['mapped' => false]);
+            ->add('img', FileType::class, ['mapped' => false, 'label' => 'Изображение'])
+            ->add('title', options: ['label' => 'Название'])
+            ->add('description', TextareaType::class, ['label' => 'Описание'])
+            ->add('categories', null, ['mapped' => false, 'label' => 'Категория']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

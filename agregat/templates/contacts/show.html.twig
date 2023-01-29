@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Texts{% endblock %}
+{% block title %}Контакты{% endblock %}
 
 {% block body %}
     <h1>Контакты</h1>
@@ -8,18 +8,18 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Description</th>
+                <th>Описание</th>
                 <td>{{ text.description }}</td>
             </tr>
             <tr>
-                <th>SubType</th>
+                <th>Подтип</th>
                 <td>{{ text.getSubTypeName() }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_texts_index_contacts') }}">back to list</a>
+    <a href="{{ path('app_texts_index_contacts') }}">Вернуться к списку</a>
 
-    <a href="{{ path('app_texts_edit_contacts', {'id': text.id}) }}">edit</a>
+    <a href="{{ path('app_texts_edit_contacts', {'id': text.id}) }}">Редактировать</a>
 
 {% endblock %}

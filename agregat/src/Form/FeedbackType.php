@@ -14,16 +14,17 @@ class FeedbackType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('phone')
+            ->add('name', null, ['label' => 'Название'])
+            ->add('phone', null, ['label' => 'Телефон'])
             ->add('email')
-            ->add('message')
+            ->add('message', null, ['label' => 'Сообщение'])
             ->add('status', ChoiceType::class, [
                 'choices' => [
-                    'Active' => FeedbackStatus::ACTIVE->value,
-                    'In progress' => FeedbackStatus::IN_PROGRESS->value,
-                    'Confirmed' => FeedbackStatus::CONFIRMED->value,
-                ]
+                    'Активный' => FeedbackStatus::ACTIVE->value,
+                    'В прогрессе' => FeedbackStatus::IN_PROGRESS->value,
+                    'Подтвержденный' => FeedbackStatus::CONFIRMED->value,
+                ],
+                'label' => 'Статус'
             ])
         ;
     }

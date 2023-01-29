@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Categories;
-use App\Entity\Products;
 use App\Entity\SubCategories;
 use App\Form\CategoriesType;
 use App\Repository\CategoriesRepository;

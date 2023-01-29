@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Texts{% endblock %}
+{% block title %}Как купить{% endblock %}
 
 {% block body %}
     <h1>Как купить</h1>
@@ -8,27 +8,27 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>Идентификатор</th>
                 <td>{{ text.id }}</td>
             </tr>
             <tr>
-                <th>Title</th>
+                <th>Название</th>
                 <td>{{ text.title }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>Описание</th>
                 <td>{{ text.description }}</td>
             </tr>
             <tr>
-                <th>SubType</th>
+                <th>Подтип</th>
                 <td>{{ text.getSubTypeName() }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_texts_index_how_buy') }}">back to list</a>
+    <a href="{{ path('app_texts_index_how_buy') }}">Вернуться к списку</a>
 
-    <a href="{{ path('app_texts_edit_how_buy', {'id': text.id}) }}">edit</a>
+    <a href="{{ path('app_texts_edit_how_buy', {'id': text.id}) }}">Редактировать</a>
 
     {{ include('howBuy/_delete_form.html.twig') }}
 {% endblock %}

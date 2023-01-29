@@ -1,38 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SubCategories{% endblock %}
+{% block title %}Подкатегория{% endblock %}
 
 {% block body %}
-    <h1>SubCategories</h1>
+    <h1>Подкатегория</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>Идентификатор</th>
                 <td>{{ sub_category.id }}</td>
             </tr>
             <tr>
-                <th>Img</th>
+                <th>Изображение</th>
                 <td>{{ sub_category.img }}</td>
             </tr>
             <tr>
-                <th>Title</th>
+                <th>Название</th>
                 <td>{{ sub_category.title }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>Описание</th>
                 <td>{{ sub_category.description }}</td>
             </tr>
             <tr>
-                <th>Category</th>
+                <th>Категория</th>
                 <td>{{ sub_category.category.title ?? '' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_sub_categories_index') }}">back to list</a>
+    <a href="{{ path('app_sub_categories_index') }}">Вернуться к списку</a>
 
-    <a href="{{ path('app_sub_categories_edit', {'id': sub_category.id}) }}">edit</a>
+    <a href="{{ path('app_sub_categories_edit', {'id': sub_category.id}) }}">Редактировать</a>
 
     {{ include('sub_categories/_delete_form.html.twig') }}
 {% endblock %}

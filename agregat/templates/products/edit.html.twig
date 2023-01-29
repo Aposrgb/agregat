@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Products{% endblock %}
+{% block title %}Редактирование Продукта{% endblock %}
 
 {% block body %}
-    <h1>Edit Products</h1>
+    <h1>Редактирование Продукта</h1>
 
-    {{ include('products/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('products/_form.html.twig', {'button_label': 'Обновить'}) }}
 
-    <a href="{{ path('app_products_index') }}">back to list</a>
+    <a href="{{ path('app_products_index') }}">Вернуться к списку</a>
 
     {{ include('products/_delete_form.html.twig') }}
 {% endblock %}

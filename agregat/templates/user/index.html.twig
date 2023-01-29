@@ -1,51 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}Список Пользователей{% endblock %}
 
 {% block body %}
-    <h1>User index</h1>
+    <h1>Список Пользователей</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Surname</th>
-                <th>DateRegistration</th>
-                <th>Firstname</th>
-                <th>Patronymic</th>
+                <th>Идентификатор</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Отчество</th>
                 <th>Email</th>
-                <th>Phone</th>
-                <th>Roles</th>
-                <th>Status</th>
-                <th>Password</th>
-                <th>actions</th>
+                <th>Телефон</th>
+                <th>Дата регистрации</th>
+                <th>Роли</th>
+                <th>Статус</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
         {% for user in users %}
             <tr>
                 <td>{{ user.id }}</td>
-                <td>{{ user.surname }}</td>
-                <td>{{ user.dateRegistration ? user.dateRegistration|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ user.firstname }}</td>
+                <td>{{ user.surname }}</td>
                 <td>{{ user.patronymic }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.phone }}</td>
+                <td>{{ user.dateRegistration ? user.dateRegistration|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ user.roles|join(', ') }}</td>
                 <td>{{ user.status }}</td>
-                <td>{{ user.password }}</td>
                 <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}">Посмотреть</a>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">Редактировать</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="11">no records found</td>
+                <td colspan="11">Не найдено записей</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_user_new') }}">Create new</a>
+    <a href="{{ path('app_user_new') }}">Добавить</a>
 {% endblock %}

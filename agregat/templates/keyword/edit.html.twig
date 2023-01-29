@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit keyword{% endblock %}
+{% block title %}Редактирование ключевых слов{% endblock %}
 
 {% block body %}
-    <h1>Edit keyword</h1>
+    <h1>Редактирование ключевых слов</h1>
 
-    {{ include('keyword/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('keyword/_form.html.twig', {'button_label': 'Обновить'}) }}
 
-    <a href="{{ path('app_keyword_index') }}">back to list</a>
+    <a href="{{ path('app_keyword_index') }}">Вернуться к списку</a>
 
 {% endblock %}

@@ -14,13 +14,10 @@ class CategoriesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('isPopular')
-            ->add('img', FileType::class, ['mapped'=> false])
-            ->add('title')
-            ->add('description', TextareaType::class, [
-                'attr' => ['style' => 'width:500px']
-            ])
-        ;
+            ->add('isPopular', null, ['label' => 'Является ли популярным'])
+            ->add('img', FileType::class, ['mapped' => false, 'label' => 'Изображение'])
+            ->add('title', null, ['label' => 'Название'])
+            ->add('description', TextareaType::class, ['label' => 'Описание']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

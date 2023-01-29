@@ -17,26 +17,28 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstname')
-            ->add('surname')
-            ->add('patronymic')
-            ->add('phone')
+            ->add('firstname', options: ['label' => 'Имя'])
+            ->add('surname', options: ['label' => 'Фамилия'])
+            ->add('patronymic', options: ['label' => 'Отчество'])
+            ->add('phone', options: ['label' => 'Телефон'])
             ->add('roles', ChoiceType::class, [
                     'choices' => [
-                        'Admin' => UserRoles::ROLE_ADMIN->value,
-                        'User' => UserRoles::ROLE_USER->value,
+                        'Админ' => UserRoles::ROLE_ADMIN->value,
+                        'Пользователь' => UserRoles::ROLE_USER->value,
                     ],
                     'multiple' => true,
-                    'mapped' => false
+                    'mapped' => false,
+                    'label' => 'Роль'
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => [
-                    'Confirmed' => UserStatus::CONFIRMED->value,
-                    'Blocked' => UserStatus::BLOCKED->value
-                ]
+                    'Подтвержденный' => UserStatus::CONFIRMED->value,
+                    'Заблокирован' => UserStatus::BLOCKED->value
+                ],
+                'label' => 'Статус'
             ])
-            ->add('email', EmailType::class)
-            ->add('password');
+            ->add('email', EmailType::class, options: ['label' => 'E-Mail'])
+            ->add('password', options: ['label' => 'Пароль']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

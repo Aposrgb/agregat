@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Feedback{% endblock %}
+{% block title %}Редактирование Обратной связи{% endblock %}
 
 {% block body %}
-    <h1>Edit Feedback</h1>
+    <h1>Редактирование Обратной связи</h1>
 
-    {{ include('feedback/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('feedback/_form.html.twig', {'button_label': 'Обновить'}) }}
 
-    <a href="{{ path('app_feedback_index') }}">back to list</a>
+    <a href="{{ path('app_feedback_index') }}">Вернуться к списку</a>
 
     {{ include('feedback/_delete_form.html.twig') }}
 {% endblock %}

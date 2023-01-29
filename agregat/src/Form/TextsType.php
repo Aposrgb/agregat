@@ -16,17 +16,11 @@ class TextsType extends AbstractType
     {
         if ($options['type'] == TextsTypeEnum::HOW_TO_BUY->value) {
             $builder
-                ->add('title')
-                ->add('description', TextareaType::class, [
-                    'attr' => ['style' => 'width:500px']
-                ])
-                ->add('subType', ChoiceType::class, [
-                    'choices' => TextsTypeEnum::HOW_TO_BUY->getSubTypes()
-                ]);
+                ->add('title', options: ['label' => 'Название'])
+                ->add('description', TextareaType::class, ['label' => 'Описание'])
+                ->add('subType', ChoiceType::class, ['label' => 'Подтип']);
         } else if ($options['type'] == TextsTypeEnum::CONTACTS->value) {
-            $builder->add('description', TextareaType::class, [
-                'attr' => ['style' => 'width:500px']
-            ]);
+            $builder->add('description', TextareaType::class, ['label' => 'Описание']);
         }
     }
 

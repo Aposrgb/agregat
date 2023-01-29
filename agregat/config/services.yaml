@@ -30,3 +30,11 @@ services:
     App\Service\FileUploadService:
         arguments:
             $dirPublic: '%kernel.project_dir%/public'
+
+    App\Service\MailerService:
+        arguments:
+            $mailFrom: '%env(MAILER_SENDER)%'
+            $host: '%env(SMTP_HOST)%'
+            $username: '%env(EMAIL)%'
+            $password: '%env(PASSWORD)%'
+            $port: '%env(PORT)%'

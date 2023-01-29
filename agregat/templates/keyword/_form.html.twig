@@ -1,10 +1,10 @@
 {{ form_start(form) }}
 <tr>
-    <th>id product</th>
+    <th>Идентификатор продукта</th>
     <td>{{ product.id }}</td>
 </tr>
     {{ form_row(form.keyWords)}}
-<button class="btn">{{ button_label|default('Save') }}</button>
+<button class="btn btn-success">{{ button_label|default('Сохранить') }}</button>
 <div hidden>
     {{ form_rest(form) }}
 </div>

@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\Feedback;
 use App\Helper\DTO\FeedbackDTO;
 use App\Repository\FeedbackRepository;
+use App\Service\MailerService;
 use App\Service\ValidatorService;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
@@ -51,6 +52,7 @@ class FeedbackApiController extends AbstractController
         SerializerInterface $serializer,
         ValidatorService    $validatorService,
         FeedbackRepository  $feedbackRepository,
+        MailerService       $mailerService,
     ): JsonResponse
     {
         /** @var FeedbackDTO $feedbackDTO */
@@ -65,6 +67,9 @@ class FeedbackApiController extends AbstractController
             ->setMessage($feedbackDTO->getMessage());
 
         $feedbackRepository->save($feedback, true);
+        $mailerService->sendMailTemplate('mail/mailer.html.twig','Обратная связь АгрегатЕКБ', context: [
+            'feedBack' => $feedback
+        ]);
         return $this->json(
             data: [
                 "data" => $feedback,

@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Texts{% endblock %}
+{% block title %}Добавить текста{% endblock %}
 
 {% block body %}
-    <h1>Create new Texts</h1>
+    <h1>Добавить текста</h1>
 
     {{ include('howBuy/_form.html.twig') }}
 
-    <a href="{{ path('app_texts_index_how_buy') }}">back to list</a>
+    <a href="{{ path('app_texts_index_how_buy') }}">Вернуться к списку</a>
 {% endblock %}

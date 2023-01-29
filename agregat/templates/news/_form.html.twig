@@ -3,8 +3,8 @@
     {{ form_row(form.text) }}
     {% if news.img %}
         <div>
-            <img id="delete_news_img" src="{{ news.img }} " alt="����������� �������" style="max-width: 250px;">
-            <input id="delete_news" value="Delete image" class="btn btn-danger font-weight-bold px-7 py-2 my-3"
+            <img id="delete_news_img" src="{{ news.img }} " alt="Изображение новости" style="max-width: 250px;">
+            <input id="delete_news" value="Удалить изображение" class="btn btn-danger font-weight-bold px-7 py-2 my-3"
                    type="button"/>
         </div>
     {% else %}
@@ -14,7 +14,7 @@
     {{ form_rest(form) }}
 </div>
 
-<button class="btn">{{ button_label|default('Save') }}</button>
+<button class="btn btn-success">{{ button_label|default('Сохранить') }}</button>
 {{ form_end(form) }}
 
 <script>
@@ -22,16 +22,16 @@
         const blocks = document.getElementById(block)
         if (blocks != null) {
             blocks.addEventListener('click', () => {
-                const isOk = confirm('Are you sure you want to delete the image?')
+                const isOk = confirm('Вы уверены, что хотите удалить изображение?')
                 if (isOk) {
-                    fetch("{{ path('app_news_delete_files', { 'id':news.id}) }}?name=" + name, {
+                    fetch("{{ path('app_news_delete_files', { 'id': news.id ? : 0 }) }}?name=" + name, {
                         method: 'DELETE',
                         headers: {
                             'Content-type': 'application/json'
                         }
                     });
                     document.getElementById(block).remove()
-                    window.location = "{{ path('app_news_edit', { 'id': news.id}) }}"
+                    window.location = "{{ path('app_news_edit', { 'id': news.id ?: 0}) }}"
                     location.reload()
                     document.getElementById(block + "_img").remove()
                 } else {

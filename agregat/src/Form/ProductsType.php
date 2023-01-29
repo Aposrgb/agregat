@@ -16,24 +16,21 @@ class ProductsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextareaType::class, [
-                'attr' => ['style' => 'width:500px']
-            ])
-            ->add('img', FileType::class, ['mapped' => false])
-            ->add('rating')
-            ->add('description', TextareaType::class, [
-                'attr' => ['style' => 'width:500px']
-            ])
-            ->add('isActual')
-            ->add('createdAt')
-            ->add('price')
+            ->add('title', TextareaType::class, ['label' => 'Название'])
+            ->add('img', FileType::class, ['mapped' => false, 'label' => 'Изображение'])
+            ->add('rating', options: ['label' => 'Рейтинг'])
+            ->add('description', TextareaType::class, ['label' => 'Описание'])
+            ->add('isActual', options: ['label' => 'Является актуальным'])
+            ->add('createdAt', options: ['label' => 'Дата создания'])
+            ->add('price', options: ['label' => 'Цена'])
             ->add('balanceStock', NumberType::class, [
-                'attr' => ['min' => 1]
+                'attr' => ['min' => 1],
+                'label' => 'Остаток на складе'
             ])
-            ->add('discountPrice')
-            ->add('code1C')
-            ->add('purchaseBalance')
-            ->add('keyWords')
+            ->add('discountPrice', null, ['label' => 'Цена со скидкой'])
+            ->add('code1C', options: ['label' => 'Код 1С'])
+            ->add('purchaseBalance', options: ['label' => 'Остаток покупок'])
+            ->add('keyWords', options: ['label' => 'Ключевые слова'])
         ;
     }
 

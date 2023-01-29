@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Texts{% endblock %}
+{% block title %}Редактирование Контактов{% endblock %}
 
 {% block body %}
-    <h1>Edit Texts</h1>
+    <h1>Редактирование Контактов</h1>
 
-    {{ include('contacts/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('contacts/_form.html.twig', {'button_label': 'Обновить'}) }}
 
-    <a href="{{ path('app_texts_index_contacts') }}">back to list</a>
+    <a href="{{ path('app_texts_index_contacts') }}">Вернуться к списку</a>
 {% endblock %}

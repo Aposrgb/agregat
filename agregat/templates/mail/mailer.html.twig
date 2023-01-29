@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>АгрегатЕКБ</title>
+</head>
+<body>
+    {% if feedBack is defined %}
+        Здравствуйте, поступила обратная связь от пользователя "{{ feedBack.name }}", номер: {{ feedBack.phone }}, сообщение пользователя:<br><br>
+        "{{ feedBack.message }}".<br><br> Идентификатор заявки {{ feedBack.id }}.
+    {% elseif purchases is defined and user is defined %}
+        Здравствуйте, поступил заказ от пользователя "{{ user.firstname }} {{ user.surname }}" с идентификатором {{ user.id }}, на продукты:<br>
+        {% for purchase in purchases %}
+            <p>Продукт: "{{ purchase.product.title }}", с идентификатором {{ purchase.product.id }}, кол-во {{ purchase.count }}
+            {% if loop.index < purchases|length %}
+                ,
+            {% else %}
+                .
+            {% endif %}
+            </p>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
