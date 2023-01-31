@@ -404,9 +404,8 @@ class Products
         return $this;
     }
 
-    #[SerializedName(serializedName: 'rating')]
     #[Groups(['get_products', 'get_baskets'])]
-    public function getAverageRating(): ?int
+    public function getAverageRating(): ?float
     {
         $count = $this->comments->count();
         $rating = 0;

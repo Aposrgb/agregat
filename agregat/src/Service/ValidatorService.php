@@ -159,6 +159,13 @@ class ValidatorService
         }
     }
 
+    public static function validateFloat($object, ExecutionContextInterface $context): void
+    {
+        if (!is_numeric($object) && $object != "") {
+            $context->buildViolation('Значение `' . $object . '` не является допустимым float')->addViolation();
+        }
+    }
+
     public function validateUsersRoles($object): bool
     {
         $roles = UserRoles::getRoles();

@@ -91,6 +91,16 @@ class ProductsRepository extends ServiceEntityRepository
                 ->andWhere('p.price <= :maxPrice')
                 ->setParameter('maxPrice', $productsFilter->getMaxPrice());
         }
+        if ($productsFilter->getMinRating()) {
+            $qb
+                ->andWhere('p.rating >= :minRating')
+                ->setParameter('minRating', $productsFilter->getMinRating());
+        }
+        if ($productsFilter->getMaxRating()) {
+            $qb
+                ->andWhere('p.rating <= :maxRating')
+                ->setParameter('maxRating', $productsFilter->getMaxRating());
+        }
         return new Paginator($qb
             ->setFirstResult($productsFilter->getPagination()->getFirstMaxResult())
             ->setMaxResults($productsFilter->getPagination()->getLimit())

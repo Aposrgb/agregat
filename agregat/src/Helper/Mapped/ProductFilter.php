@@ -2,15 +2,31 @@
 
 namespace App\Helper\Mapped;
 
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 class ProductFilter
 {
+    /** @OA\Property(type="array", @OA\Items(ref=@Model(type="App\Entity\Categories", groups={"get_filter"}))) */
+    #[Groups(['get_filter'])]
     private array $categories = [];
 
+    /** @OA\Property(type="array", @OA\Items(ref=@Model(type="App\Entity\SubCategories", groups={"get_filter"}))) */
+    #[Groups(['get_filter'])]
     private array $subCategories = [];
 
+    #[Groups(['get_filter'])]
     private ?int $minPrice = 0;
 
+    #[Groups(['get_filter'])]
     private ?int $maxPrice = 0;
+
+    #[Groups(['get_filter'])]
+    private ?float $maxRating = 0;
+
+    #[Groups(['get_filter'])]
+    private ?float $minRating = 0;
 
     /**
      * @return array
@@ -97,6 +113,29 @@ class ProductFilter
         if (!in_array($category, $this->subCategories)) {
             $this->subCategories[] = $category;
         }
+        return $this;
+    }
+
+    public function getMinRating(): ?float
+    {
+        return $this->minRating;
+    }
+
+
+    public function setMinRating(?float $minRating): ProductFilter
+    {
+        $this->minRating = $minRating;
+        return $this;
+    }
+
+    public function getMaxRating(): ?float
+    {
+        return $this->maxRating;
+    }
+
+    public function setMaxRating(?float $maxRating): ProductFilter
+    {
+        $this->maxRating = $maxRating;
         return $this;
     }
 }

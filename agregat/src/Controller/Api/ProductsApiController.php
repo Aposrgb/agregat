@@ -55,6 +55,20 @@ class ProductsApiController extends AbstractController
      *
      * @OA\Parameter(
      *     in="query",
+     *     name="filter[minRating]",
+     *     description="Мин. рейтинг",
+     *     @OA\Schema(type="float")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[maxRating]",
+     *     description="Макс. рейтинг",
+     *     @OA\Schema(type="float")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
      *     name="filter[isActual]",
      *     description="Актуальность",
      *     @OA\Schema(type="boolean")
@@ -179,14 +193,7 @@ class ProductsApiController extends AbstractController
      *     description="Success",
      *     @OA\JsonContent(
      *         @OA\Property(property="data", type="object",
-     *             @OA\Property(property="maxPrice", type="integer"),
-     *             @OA\Property(property="minPrice", type="integer"),
-     *             @OA\Property(property="categories", type="array",
-     *                  @OA\Items(ref=@Model(type="App\Entity\Categories", groups={"get_filter"}))
-     *             ),
-     *             @OA\Property(property="subCategories", type="array",
-     *                 @OA\Items(ref=@Model(type="App\Entity\SubCategories", groups={"get_filter"}))
-     *             )
+     *             ref=@Model(type="App\Helper\Mapped\ProductFilter", groups={"get_filter"})
      *         )
      *     )
      * )
@@ -219,12 +226,7 @@ class ProductsApiController extends AbstractController
         $products = $productsRepository->findAll();
         $filter = $productsService->getFilterByProducts($products, $productsFilter);
 
-        return $this->json(['data' => [
-            'maxPrice' => $filter->getMaxPrice(),
-            'minPrice' => $filter->getMinPrice(),
-            'categories' => $filter->getCategories(),
-            'subCategory' => $filter->getSubCategories()
-        ]], context: ['groups' => ['get_filter']]);
+        return $this->json(['data' => $filter], context: ['groups' => ['get_filter']]);
     }
 
     /**

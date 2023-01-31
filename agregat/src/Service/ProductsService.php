@@ -42,18 +42,19 @@ class ProductsService
             return $isFilter;
         });
         foreach ($products as $product) {
-            $category = $product->getCategories();
-            if ($category) {
+            if ($category = $product->getCategories()) {
                 $productFilter->addCategory($category);
             }
-            $subCategories = $product->getSubCategories();
-            if ($subCategories) {
+            if ($subCategories = $product->getSubCategories()) {
                 $productFilter->addSubCategory($subCategories);
             }
-            $price = $product->getPrice();
-            if ($price) {
+            if ($price = $product->getPrice()) {
                 $productFilter->setMinPrice(min($price, $productFilter->getMinPrice()));
                 $productFilter->setMaxPrice(max($price, $productFilter->getMaxPrice()));
+            }
+            if ($rating = $product->getRating()) {
+                $productFilter->setMinRating(min($rating, $productFilter->getMinRating()));
+                $productFilter->setMaxRating(max($rating, $productFilter->getMaxRating()));
             }
         }
         return $productFilter;

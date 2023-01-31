@@ -24,6 +24,12 @@ class ProductsFilter
     #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
     private $maxPrice;
 
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateFloat'], groups: ['filter'])]
+    private $minRating;
+
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateFloat'], groups: ['filter'])]
+    private $maxRating;
+
     private $name;
 
     public function __construct()
@@ -147,6 +153,42 @@ class ProductsFilter
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMinRating()
+    {
+        return $this->minRating;
+    }
+
+    /**
+     * @param mixed $minRating
+     * @return ProductsFilter
+     */
+    public function setMinRating($minRating)
+    {
+        $this->minRating = $minRating;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxRating()
+    {
+        return $this->maxRating;
+    }
+
+    /**
+     * @param mixed $maxRating
+     * @return ProductsFilter
+     */
+    public function setMaxRating($maxRating)
+    {
+        $this->maxRating = $maxRating;
         return $this;
     }
 
