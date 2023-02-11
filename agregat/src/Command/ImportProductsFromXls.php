@@ -62,6 +62,20 @@ class ImportProductsFromXls extends Command
         $xlsFilesPath = $this->parameterBag->get('PUBLIC_DIRECTORY') . '/xls/';
         $files = $this->scanDir($xlsFilesPath, $this->getDirAndFiles($xlsFilesPath));
         $this->getClassByFiles($xlsFilesPath, $files);
+        $this->setNamesEntity(true, true, true, true);
+        foreach ($this->products as $product) {
+            foreach ($this->categories as $category) {
+                if ($product->getTitle() == $category->getTitle()) {
+                    $this->entityManager->remove($product);
+                }
+            }
+            foreach ($this->subCategories as $subCategory) {
+                if ($product->getTitle() == $subCategory->getTitle()) {
+                    $this->entityManager->remove($product);
+                }
+            }
+        }
+        $this->entityManager->flush();
         return Command::SUCCESS;
     }
 
