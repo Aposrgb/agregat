@@ -31,6 +31,7 @@ class ProductsType extends AbstractType
             ->add('code1C', options: ['label' => 'Код 1С'])
             ->add('purchaseBalance', options: ['label' => 'Остаток покупок'])
             ->add('keyWords', options: ['label' => 'Ключевые слова'])
+            ->add('article', options: ['label' => 'Артикул'])
         ;
     }
 

@@ -170,6 +170,7 @@ class ImportProductsFromXls extends Command
             $product
                 ->setCategories($categories->addProduct($product))
                 ->setSubCategories($subCategories?->addProduct($product))
+                ->setArticle($row[8])
                 ->setKeyWords($row[0])
                 ->setIsActual((bool)$row[5])
                 ->setBrand($brand)

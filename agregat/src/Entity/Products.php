@@ -99,6 +99,10 @@ class Products
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Purchase::class)]
     private Collection $purchases;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['get_products', 'get_baskets'])]
+    private ?string $article = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -453,6 +457,18 @@ class Products
                 $purchase->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getArticle(): ?string
+    {
+        return $this->article;
+    }
+
+    public function setArticle(?string $article): self
+    {
+        $this->article = $article;
 
         return $this;
     }

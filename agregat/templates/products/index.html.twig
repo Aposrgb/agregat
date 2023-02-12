@@ -25,6 +25,7 @@
             <th>Цена</th>
             <th>Остаток на складе</th>
             <th>Ключевые слова</th>
+            <th>Артикул</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -44,6 +45,7 @@
                 <td>{{ product.price }}</td>
                 <td>{{ product.balanceStock }}</td>
                 <td>{{ product.keyWords }}</td>
+                <td>{{ product.article }}</td>
                 <td>
                     <a href="{{ path('app_products_show', {'id': product.id}) }}">Посмотреть</a>
                     <a href="{{ path('app_products_edit', {'id': product.id}) }}">Редактировать</a>
