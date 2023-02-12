@@ -3,19 +3,30 @@
 
 {% block body %}
     <h1>Список Продуктов</h1>
-
+    <div class="form-outline">
+        <input type="search" id="search_input" class="form-control" placeholder="Поиск по названию"
+               aria-label="Search"/>
+        <div>
+            <button onclick="search()" style="float: right;font-size: 17px;padding: 10px 25px;margin-top: 2vh;"
+                    class="btn btn-primary">Поиск
+            </button>
+            <button onclick="window.location.href = '{{ path('app_products_index') }}'" style="float: right;font-size: 17px;padding: 10px 25px;margin-top: 2vh; margin-right: 2vh"
+                    class="btn btn-outline-secondary">Очистка
+            </button>
+        </div>
+    </div>
     <table class="table">
         <thead>
-            <tr>
-                <th>Идентификатор</th>
-                <th>Название</th>
-                <th>Изображение</th>
-                <th>Рейтинг</th>
-                <th>Цена</th>
-                <th>Остаток на складе</th>
-                <th>Ключевые слова</th>
-                <th>Действия</th>
-            </tr>
+        <tr>
+            <th>Идентификатор</th>
+            <th>Название</th>
+            <th>Изображение</th>
+            <th>Рейтинг</th>
+            <th>Цена</th>
+            <th>Остаток на складе</th>
+            <th>Ключевые слова</th>
+            <th>Действия</th>
+        </tr>
         </thead>
         <tbody>
         {% for product in products %}
@@ -25,7 +36,7 @@
                 <td>
                     {% if  product.img %}
                         <div>
-                            <img src="{{  product.img }} "style="width: 32px;height: 32px">
+                            <img src="{{ product.img }} " style="width: 32px;height: 32px">
                         </div>
                     {% endif %}
                 </td>
@@ -47,4 +58,26 @@
     </table>
 
     <a href="{{ path('app_products_new') }}">Добавить</a>
+    <script>
+        function search() {
+            let value = document.getElementById('search_input').value
+            if (value !== '' && value.length > 0) {
+                window.location.href = '{{ path('app_products_index') }}?search=' + value
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            let value = params.search;
+            if(value !== '' && value.length > 0){
+                document.getElementById('search_input').value = value
+            }
+            document.querySelector('#search_input').addEventListener('keydown', function(e) {
+                if (e.keyCode === 13) {
+                    search()
+                }
+            });
+        })
+    </script>
 {% endblock %}

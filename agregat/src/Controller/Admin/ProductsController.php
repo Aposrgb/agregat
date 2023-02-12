@@ -22,10 +22,16 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/', name: 'app_products_index', methods: ['GET'])]
-    public function index(ProductsRepository $productsRepository): Response
+    public function index(Request $request, ProductsRepository $productsRepository): Response
     {
+        $search = $request->query->get('search');
+        if ($search && strlen($search) > 0) {
+            $products = $productsRepository->findByTitle($search);
+        } else {
+            $products = $productsRepository->findAll();
+        }
         return $this->render('products/index.html.twig', [
-            'products' => $productsRepository->findAll(),
+            'products' => $products,
         ]);
     }
 
