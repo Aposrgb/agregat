@@ -73,8 +73,11 @@ class ProductsRepository extends ServiceEntityRepository
     public function getProductsByFilter(ProductsFilter $productsFilter): Paginator
     {
         $qb = $this->createQueryBuilder('p');
-        if($productsFilter->getName()){
+        if ($productsFilter->getName()) {
             $this->searchByName($qb, $productsFilter->getName());
+            $qb
+                ->orWhere($qb->expr()->like('p.article', ':article'))
+                ->setParameter('article', '%' . $productsFilter->getName() . '%');
         }
         if ($productsFilter->getCategoryId()) {
             $qb

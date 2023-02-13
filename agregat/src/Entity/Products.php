@@ -161,6 +161,9 @@ class Products
 
     public function getDescription(): ?string
     {
+        if ($this->article) {
+            return $this->description . "\nАртикул: " . $this->article;
+        }
         return $this->description;
     }
 
