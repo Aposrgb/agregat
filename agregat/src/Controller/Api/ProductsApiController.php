@@ -165,7 +165,7 @@ class ProductsApiController extends AbstractController
      *     description="Success",
      *     @OA\JsonContent(
      *          @OA\Property(property="data", type="object",
-     *              ref=@Model(type="App\Entity\Products", groups={"get_products"})
+     *              ref=@Model(type="App\Entity\Products", groups={"get_product_detail"})
      *          )
      *     )
      * )
@@ -182,7 +182,7 @@ class ProductsApiController extends AbstractController
         Products $product,
     ): JsonResponse
     {
-        return $this->json(data: ['data' => $product], context: ['groups' => ['get_products']]);
+        return $this->json(data: ['data' => $product], context: ['groups' => ['get_product_detail']]);
     }
 
     /**
@@ -204,6 +204,13 @@ class ProductsApiController extends AbstractController
      *     name="filter[isActual]",
      *     description="Актуальность",
      *     @OA\Schema(type="boolean")
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="filter[category]",
+     *     description="id - категории",
+     *     @OA\Schema(type="integer")
      * )
      *
      */

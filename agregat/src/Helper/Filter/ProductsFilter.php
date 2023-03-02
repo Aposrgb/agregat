@@ -12,6 +12,9 @@ class ProductsFilter
 
     private $isActual;
 
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
+    private $category;
+
     #[Assert\Callback(callback: [ValidatorService::class, 'validateArrayInteger'], groups: ['filter'])]
     private $categoryId;
 
@@ -189,6 +192,24 @@ class ProductsFilter
     public function setMaxRating($maxRating)
     {
         $this->maxRating = $maxRating;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     * @return ProductsFilter
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
         return $this;
     }
 

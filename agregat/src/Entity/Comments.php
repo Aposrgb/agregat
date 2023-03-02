@@ -13,23 +13,23 @@ class Comments
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['get_comments'])]
+    #[Groups(['get_comments', 'get_product_detail'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['get_comments'])]
+    #[Groups(['get_comments', 'get_product_detail'])]
     private ?string $text = null;
 
     #[ORM\Column]
-    #[Groups(['get_comments'])]
+    #[Groups(['get_comments', 'get_product_detail'])]
     private ?int $rating = null;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
-    #[Groups(['get_comments'])]
+    #[Groups(['get_comments', 'get_product_detail'])]
     private array $images = [];
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
-    #[Groups(['get_comments'])]
+    #[Groups(['get_comments', 'get_product_detail'])]
     private ?User $owner = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]

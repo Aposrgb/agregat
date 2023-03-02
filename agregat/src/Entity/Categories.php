@@ -15,23 +15,23 @@ class Categories
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['get_products', 'get_categories', 'get_filter'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_categories', 'get_filter'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['get_products', 'get_categories'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_categories'])]
     private ?bool $isPopular = false;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['get_products', 'get_categories'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_categories'])]
     private ?string $img = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get_products', 'get_categories', 'get_filter'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_categories', 'get_filter'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['get_products', 'get_categories'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_categories'])]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'categories', targetEntity: Products::class)]

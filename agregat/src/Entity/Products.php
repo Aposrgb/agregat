@@ -17,27 +17,26 @@ class Products
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['get_products', 'get_basket', 'get_baskets', 'get_comments', 'get_purchase_user'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_basket', 'get_baskets', 'get_comments', 'get_purchase_user'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['get_products', 'get_baskets', 'get_comments', 'get_purchase_user'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets', 'get_comments', 'get_purchase_user'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['get_products', 'get_baskets', 'get_purchase_user'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets', 'get_purchase_user'])]
     private ?string $img = null;
 
     #[ORM\Column]
-    #[Groups(['get_products', 'get_baskets'])]
     private ?float $rating = 0.0;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?bool $isActual = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -45,15 +44,15 @@ class Products
     private ?\DateTimeInterface $createdAt;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?Categories $categories = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?float $price = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?float $discountPrice = null;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Basket::class)]
@@ -66,14 +65,14 @@ class Products
     private ?string $code1C = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?int $balanceStock = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $purchaseBalance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?string $keyWords = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
@@ -91,6 +90,7 @@ class Products
     private ?array $bundle = [];
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comments::class)]
+    #[Groups(['get_product_detail'])]
     private Collection $comments;
 
     #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'products')]
@@ -100,7 +100,7 @@ class Products
     private Collection $purchases;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?string $article = null;
 
     public function __construct()
@@ -411,7 +411,8 @@ class Products
         return $this;
     }
 
-    #[Groups(['get_products', 'get_baskets'])]
+    #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
+    #[SerializedName(serializedName: 'rating')]
     public function getAverageRating(): ?float
     {
         $count = $this->comments->count();

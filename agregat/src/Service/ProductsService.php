@@ -39,6 +39,9 @@ class ProductsService
             if ($productsFilter->getIsActual()) {
                 $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
             }
+            if($productsFilter->getCategory() && $product->getCategories()){
+                $isFilter = $product->getCategories()->getId() == $productsFilter->getCategory();
+            }
             return $isFilter;
         });
         foreach ($products as $product) {
@@ -52,7 +55,7 @@ class ProductsService
                 $productFilter->setMinPrice(min($price, $productFilter->getMinPrice()));
                 $productFilter->setMaxPrice(max($price, $productFilter->getMaxPrice()));
             }
-            if ($rating = $product->getRating()) {
+            if ($rating = $product->getAverageRating()) {
                 $productFilter->setMinRating(min($rating, $productFilter->getMinRating()));
                 $productFilter->setMaxRating(max($rating, $productFilter->getMaxRating()));
             }

@@ -78,6 +78,9 @@ class ProductsRepository extends ServiceEntityRepository
             $qb
                 ->orWhere($qb->expr()->like('p.article', ':article'))
                 ->setParameter('article', '%' . $productsFilter->getName() . '%');
+            $qb
+                ->orWhere($qb->expr()->like('p.keyWords', ':keyWords'))
+                ->setParameter('keyWords', '%' . $productsFilter->getName() . '%');
         }
         if ($productsFilter->getCategoryId()) {
             $qb

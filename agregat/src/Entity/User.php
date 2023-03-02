@@ -19,11 +19,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get_basket', 'get_baskets', 'get_comments', 'get_profile', 'get_purchase_user'])]
+    #[Groups(['get_basket', 'get_baskets', 'get_comments', 'get_profile', 'get_purchase_user', 'get_product_detail'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['get_profile', 'get_purchase_user'])]
+    #[Groups(['get_profile', 'get_purchase_user', 'get_product_detail'])]
     private ?string $surname = null;
 
     #[ORM\Column(type: 'datetime')]
@@ -31,15 +31,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $dateRegistration;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['get_profile', 'get_purchase_user'])]
+    #[Groups(['get_profile', 'get_purchase_user', 'get_product_detail'])]
     private ?string $firstname = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['get_profile'])]
+    #[Groups(['get_profile', 'get_product_detail'])]
     private ?string $patronymic = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['get_profile'])]
+    #[Groups(['get_profile', 'get_product_detail'])]
     private ?string $email = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -95,7 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $purchases;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['get_profile', 'get_purchase_user'])]
+    #[Groups(['get_profile', 'get_purchase_user', 'get_product_detail'])]
     private ?string $photo = null;
 
     public function __construct()
