@@ -9,8 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
-    #[Route('', name: 'index', methods: ['GET'])]
-    public function index(Request $request): Response
+    #[Route('', name: 'front', methods: ['GET'])]
+    public function front(Request $request): Response
     {
         return $this->render('index.html');
     }

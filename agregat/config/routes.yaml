@@ -12,7 +12,6 @@ api:
     type:     annotation
     prefix:   /api
     trailing_slash_on_root: false
-
 app.swagger_ui:
     path: /{area}/doc
     methods: GET
@@ -24,6 +23,6 @@ route1:
         req: ".+"
 route2:
     path: /{req}
-    defaults: { _controller: 'App\Controller\IndexController::index' }
+    defaults: { _controller: 'App\Controller\IndexController::front' }
     requirements:
         req: ".+"
