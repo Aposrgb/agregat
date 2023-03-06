@@ -100,7 +100,7 @@ class FeedbackApiController extends AbstractController
      * )
      *
      */
-    #[Route('/call', name: 'call_order', methods: ['POST'])]
+    #[Route('', name: 'call_order', methods: ['PATCH'])]
     public function callOrder(
         Request       $request,
         MailerService $mailerService,
@@ -122,6 +122,6 @@ class FeedbackApiController extends AbstractController
         $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Заказали звонок АгрегатЕКБ', context: [
             'phone' => $phone
         ]);
-        return $this->json(data: ['message' => 'ok'], status: Response::HTTP_NO_CONTENT);
+        return $this->json(data: ['message' => 'ok'], status: Response::HTTP_OK);
     }
 }
