@@ -97,7 +97,7 @@ class FeedbackApiController extends AbstractController
      * )
      *
      */
-    #[Route('/call', name: 'call_order', methods: ['PATCH'])]
+    #[Route('/call', name: 'call_order', methods: ['POST'])]
     public function callOrder(
         Request       $request,
         MailerService $mailerService,
