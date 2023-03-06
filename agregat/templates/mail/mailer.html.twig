@@ -20,7 +20,7 @@
             {% endif %}
             </p>
         {% endfor %}
-    {% elseif phone is defined %}
+    {% else %}
         Здравствуйте, поступил заказ на звонок, пожалуйста перезвоните по номеру {{ phone }}
     {% endif %}
 </body>
