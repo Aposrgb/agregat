@@ -78,12 +78,6 @@ class FeedbackApiController extends AbstractController
      *     @OA\JsonContent(ref="#/components/schemas/ApiException")
      * )
      *
-     * @OA\Parameter(
-     *     in="query",
-     *     name="type",
-     *     description="1 - обратная связь, 2 - Заказ звон"
-     *     @OA\Schema(type="integer", default="1")
-     * )
      *
      * @OA\Response(
      *     response="201",
