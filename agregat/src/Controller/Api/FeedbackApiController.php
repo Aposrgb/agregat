@@ -34,20 +34,21 @@ class FeedbackApiController extends AbstractController
      *     )
      * )
      *
-     * @OA\Parameter(
-     *     in="path",
+     * @OA\RequestBody(
      *     required=true,
-     *     name="phone",
-     *     @OA\Schema(type="string")
+     *     @OA\JsonContent(
+     *          @OA\Property(property="phone", type="string")
+     *     )
      * )
      *
      */
-    #[Route('/{phone}', name: 'create_feedback_call', methods: ['PATCH'])]
+    #[Route('', name: 'create_feedback_call', methods: ['PATCH'])]
     public function createFeedbackCall(
-        string        $phone,
+        Request       $request,
         MailerService $mailerService,
     ): JsonResponse
     {
+        $phone = json_decode($request->getContent(), true)['phone'] ?? null;
         if (!$phone or strlen($phone) < 5) {
             throw new ApiException(message: 'Нет телефона или длина телефона слишком коротка');
         }
@@ -65,6 +66,7 @@ class FeedbackApiController extends AbstractController
         ]);
         return $this->json(data: ['message' => 'ok'], status: Response::HTTP_OK);
     }
+
     /**
      * Создание обратной связи
      *
