@@ -23,8 +23,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/feedback')]
 class FeedbackApiController extends AbstractController
 {
-
-
     /**
      * Заказать звонок
      *
