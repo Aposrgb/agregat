@@ -242,37 +242,36 @@ class ProductsApiController extends AbstractController
      * Заказать звонок
      *
      * @OA\Response(
-     *     response="204",
+     *     response="200",
      *     description="success",
      *     @OA\JsonContent(
      *         @OA\Property(property="message", type="string", example="ok")
      *     )
      * )
      *
-     * @OA\RequestBody(
+     * @OA\Parameter(
+     *     in="path",
      *     required=true,
-     *     @OA\JsonContent(
-     *          @OA\Property(property="phone", type="string")
-     *     )
+     *     name="phone",
+     *     @OA\Schema(type="string")
      * )
      *
      */
-    #[Route('/call', name: 'send_order', methods: ['PUT'])]
+    #[Route('/call/{phone}', name: 'send_order', methods: ['GET'])]
     public function sendOrder(
-        Request       $request,
+        string        $phone,
         MailerService $mailerService,
     ): JsonResponse
     {
-        $phone = json_decode($request->getContent(), true)['phone'] ?? null;
         if (!$phone or strlen($phone) < 5) {
             throw new ApiException(message: 'Нет телефона или длина телефона слишком коротка');
         }
-        if(str_contains($phone, '+')){
-            if(!is_numeric(substr($phone, 1))){
+        if (str_contains($phone, '+')) {
+            if (!is_numeric(substr($phone, 1))) {
                 throw new ApiException(message: 'Неверный телефон');
             }
-        } else{
-            if(!is_numeric($phone)){
+        } else {
+            if (!is_numeric($phone)) {
                 throw new ApiException(message: 'Неверный телефон');
             }
         }
