@@ -42,7 +42,7 @@ class FeedbackApiController extends AbstractController
      * )
      *
      */
-    #[Route('/{phone}/', name: 'create_feedback_call', methods: ['POST'])]
+    #[Route('/{phone}', name: 'create_feedback_call', methods: ['POST'])]
     public function createFeedbackCall(
         string        $phone,
         MailerService $mailerService,

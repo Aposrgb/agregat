@@ -12,7 +12,7 @@ security:
     firewalls:
         api:
             lazy: true
-            pattern: ^/api
+            pattern: /api
             stateless: true
             custom_authenticator: App\Security\ApiAuthenticator
         admin:
