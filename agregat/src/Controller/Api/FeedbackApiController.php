@@ -4,7 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Feedback;
 use App\Helper\DTO\FeedbackDTO;
-use App\Helper\EnumType\FeedBackType;
+use App\Helper\Exception\ApiException;
 use App\Repository\FeedbackRepository;
 use App\Service\MailerService;
 use App\Service\ValidatorService;
@@ -23,7 +23,48 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/feedback')]
 class FeedbackApiController extends AbstractController
 {
-
+    /**
+     * Заказать звонок
+     *
+     * @OA\Response(
+     *     response="200",
+     *     description="success",
+     *     @OA\JsonContent(
+     *         @OA\Property(property="message", type="string", example="ok")
+     *     )
+     * )
+     *
+     * @OA\Parameter(
+     *     in="path",
+     *     required=true,
+     *     name="phone",
+     *     @OA\Schema(type="string")
+     * )
+     *
+     */
+    #[Route('/{phone}', name: 'create_feedback_call', methods: ['POST'])]
+    public function createFeedbackCall(
+        string        $phone,
+        MailerService $mailerService,
+    ): JsonResponse
+    {
+        if (!$phone or strlen($phone) < 5) {
+            throw new ApiException(message: 'Нет телефона или длина телефона слишком коротка');
+        }
+        if (str_contains($phone, '+')) {
+            if (!is_numeric(substr($phone, 1))) {
+                throw new ApiException(message: 'Неверный телефон');
+            }
+        } else {
+            if (!is_numeric($phone)) {
+                throw new ApiException(message: 'Неверный телефон');
+            }
+        }
+        $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Заказали звонок АгрегатЕКБ', context: [
+            'phone' => $phone
+        ]);
+        return $this->json(data: ['message' => 'ok'], status: Response::HTTP_OK);
+    }
     /**
      * Создание обратной связи
      *
@@ -40,8 +81,8 @@ class FeedbackApiController extends AbstractController
      * @OA\Parameter(
      *     in="query",
      *     name="type",
-     *     description="1 - обратная связь, 2 - Заказ звонка",
-     *     @OA\Schema(type="integer", default="1", enum={1,2})
+     *     description="1 - обратная связь, 2 - Заказ звон"
+     *     @OA\Schema(type="integer", default="1")
      * )
      *
      * @OA\Response(
@@ -64,33 +105,21 @@ class FeedbackApiController extends AbstractController
         MailerService       $mailerService,
     ): JsonResponse
     {
-        $type = $request->query->get('type', 1);
-
         /** @var FeedbackDTO $feedbackDTO */
         $feedbackDTO = $serializer->deserialize(
             $request->getContent(), FeedbackDTO::class, 'json'
         );
-        if(FeedBackType::getType($type) == FeedBackType::CALL){
-            $validatorService->validate($feedbackDTO, ['create_call']);
-            $feedback = (new Feedback())
-                ->setPhone($feedbackDTO->getPhone());
-            $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Заказали звонок АгрегатЕКБ', context: [
-                'phone' => $feedbackDTO->getPhone()
-            ]);
-        } else {
-            $validatorService->validate($feedbackDTO, ['create_feedback']);
-            $feedback = (new Feedback())
-                ->setEmail($feedbackDTO->getEmail())
-                ->setName($feedbackDTO->getName())
-                ->setPhone($feedbackDTO->getPhone())
-                ->setMessage($feedbackDTO->getMessage());
+        $validatorService->validate($feedbackDTO, ['create_feedback']);
+        $feedback = (new Feedback())
+            ->setEmail($feedbackDTO->getEmail())
+            ->setName($feedbackDTO->getName())
+            ->setPhone($feedbackDTO->getPhone())
+            ->setMessage($feedbackDTO->getMessage());
 
-            $feedbackRepository->save($feedback, true);
-            $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Обратная связь АгрегатЕКБ', context: [
-                'feedBack' => $feedback
-            ]);
-        }
-
+        $feedbackRepository->save($feedback, true);
+        $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Обратная связь АгрегатЕКБ', context: [
+            'feedBack' => $feedback
+        ]);
         return $this->json(
             data: [
                 "data" => $feedback,
