@@ -257,7 +257,7 @@ class ProductsApiController extends AbstractController
      * )
      *
      */
-    #[Route('/call/{phone}', name: 'send_order', methods: ['GET'])]
+    #[Route('/{phone}', name: 'send_order', methods: ['PATCH'])]
     public function sendOrder(
         string        $phone,
         MailerService $mailerService,
