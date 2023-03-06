@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Feedback;
 use App\Helper\DTO\FeedbackDTO;
+use App\Helper\Exception\ApiException;
 use App\Repository\FeedbackRepository;
 use App\Service\MailerService;
 use App\Service\ValidatorService;
@@ -67,7 +68,7 @@ class FeedbackApiController extends AbstractController
             ->setMessage($feedbackDTO->getMessage());
 
         $feedbackRepository->save($feedback, true);
-        $mailerService->sendMailTemplate('mail/mailer.html.twig','Обратная связь АгрегатЕКБ', context: [
+        $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Обратная связь АгрегатЕКБ', context: [
             'feedBack' => $feedback
         ]);
         return $this->json(
@@ -78,5 +79,46 @@ class FeedbackApiController extends AbstractController
             context: ['groups' => ['get_feedback']]
 
         );
+    }
+
+    /**
+     * Заказать звонок
+     *
+     * @OA\Response(
+     *     response="204",
+     *     description="success"
+     * )
+     *
+     * @OA\RequestBody(
+     *     required=true,
+     *     @OA\JsonContent(
+     *          @OA\Property(property="phone", type="string")
+     *     )
+     * )
+     *
+     */
+    #[Route('/call', name: 'call_order', methods: ['PATCH'])]
+    public function callOrder(
+        Request       $request,
+        MailerService $mailerService,
+    ): JsonResponse
+    {
+        $phone = json_decode($request->getContent(), true)['phone'] ?? null;
+        if (!$phone or strlen($phone) < 5) {
+            throw new ApiException(message: 'Нет телефона или длина телефона слишком коротка');
+        }
+        if(str_contains($phone, '+')){
+            if(!is_numeric(substr($phone, 1))){
+                throw new ApiException(message: 'Неверный телефон');
+            }
+        } else{
+            if(!is_numeric($phone)){
+                throw new ApiException(message: 'Неверный телефон');
+            }
+        }
+        $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Заказали звонок АгрегатЕКБ', context: [
+            'phone' => $phone
+        ]);
+        return $this->json([], Response::HTTP_NO_CONTENT);
     }
 }
