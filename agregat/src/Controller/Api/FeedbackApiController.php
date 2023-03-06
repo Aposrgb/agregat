@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Feedback;
 use App\Helper\DTO\FeedbackDTO;
+use App\Helper\Exception\ApiException;
 use App\Repository\FeedbackRepository;
 use App\Service\MailerService;
 use App\Service\ValidatorService;
@@ -22,6 +23,50 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/feedback')]
 class FeedbackApiController extends AbstractController
 {
+
+
+    /**
+     * Заказать звонок
+     *
+     * @OA\Response(
+     *     response="200",
+     *     description="success",
+     *     @OA\JsonContent(
+     *         @OA\Property(property="message", type="string", example="ok")
+     *     )
+     * )
+     *
+     * @OA\Parameter(
+     *     in="path",
+     *     required=true,
+     *     name="phone",
+     *     @OA\Schema(type="string")
+     * )
+     *
+     */
+    #[Route('/{phone}', name: 'create_feedback_call', methods: ['POST'])]
+    public function createFeedbackCall(
+        string        $phone,
+        MailerService $mailerService,
+    ): JsonResponse
+    {
+        if (!$phone or strlen($phone) < 5) {
+            throw new ApiException(message: 'Нет телефона или длина телефона слишком коротка');
+        }
+        if (str_contains($phone, '+')) {
+            if (!is_numeric(substr($phone, 1))) {
+                throw new ApiException(message: 'Неверный телефон');
+            }
+        } else {
+            if (!is_numeric($phone)) {
+                throw new ApiException(message: 'Неверный телефон');
+            }
+        }
+        $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Заказали звонок АгрегатЕКБ', context: [
+            'phone' => $phone
+        ]);
+        return $this->json(data: ['message' => 'ok'], status: Response::HTTP_OK);
+    }
     /**
      * Создание обратной связи
      *
