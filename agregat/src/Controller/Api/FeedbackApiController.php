@@ -74,8 +74,8 @@ class FeedbackApiController extends AbstractController
             $validatorService->validate($feedbackDTO, ['create_call']);
             $feedback = (new Feedback())
                 ->setPhone($feedbackDTO->getPhone());
-            $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Обратная связь АгрегатЕКБ', context: [
-                'phone' => $feedback->getPhone()
+            $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Заказ звонка АгрегатЕКБ', context: [
+                'phone' => $feedbackDTO->getPhone()
             ]);
         } else {
             $validatorService->validate($feedbackDTO, ['create_feedback']);
@@ -90,7 +90,6 @@ class FeedbackApiController extends AbstractController
                 'feedBack' => $feedback
             ]);
         }
-
 
         return $this->json(
             data: [
