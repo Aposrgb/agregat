@@ -86,7 +86,10 @@ class FeedbackApiController extends AbstractController
      *
      * @OA\Response(
      *     response="204",
-     *     description="success"
+     *     description="success",
+     *     @OA\JsonContent(
+     *         @OA\Property(property="message", type="string", example="ok")
+     *     )
      * )
      *
      * @OA\RequestBody(
@@ -119,6 +122,6 @@ class FeedbackApiController extends AbstractController
         $mailerService->sendMailTemplate('mail/mailer.html.twig', 'Заказали звонок АгрегатЕКБ', context: [
             'phone' => $phone
         ]);
-        return $this->json([], Response::HTTP_NO_CONTENT);
+        return $this->json(data: ['message' => 'ok'], status: Response::HTTP_NO_CONTENT);
     }
 }
