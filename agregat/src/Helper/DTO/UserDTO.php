@@ -12,39 +12,40 @@ class UserDTO
     /** @OA\Property(type="string") */
     #[Assert\NotBlank(groups: ['registration', 'authorization'])]
     #[Assert\Email(groups: ['registration', 'authorization', 'edit_user'])]
-    #[Assert\Length(min: 6, max: 30, groups: ['registration', 'authorization', 'edit_user'])]
+    #[Assert\Length(min: 6, max: 30, minMessage: 'Длина имени почты быть минимум 6 символа', maxMessage: 'Длина почты должна быть максимум 30 символов', groups: ['registration', 'authorization', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'authorization', 'edit_user'])]
     #[Groups(groups: ['registration', 'authorization', 'edit_user'])]
     private $email;
 
     /** @OA\Property(type="string") */
     #[Assert\NotBlank(groups: ['registration', 'authorization'])]
-    #[Assert\Length(min: 6, max: 30, groups: ['registration', 'authorization'])]
+    #[Assert\Length(min: 6, max: 30, minMessage: 'Длина пароля должна быть минимум 6 символа', maxMessage: 'Длина пароля должна быть максимум 30 символов', groups: ['registration', 'authorization'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'authorization'])]
     #[Groups(groups: ['registration', 'authorization'])]
     private $password;
 
     /** @OA\Property(type="string") */
     #[Assert\NotBlank(groups: ['registration'])]
-    #[Assert\Length(min: 2, max: 20, groups: ['registration', 'edit_user'])]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'Длина имени должна быть минимум 2 символа', maxMessage: 'Длина имени должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'edit_user'])]
     #[Groups(groups: ['registration', 'edit_user'])]
     private $name = null;
 
     /** @OA\Property(type="string") */
     #[Assert\NotBlank(groups: ['registration'])]
-    #[Assert\Length(min: 2, max: 20, groups: ['registration', 'edit_user'])]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'Длина фамилии должна быть минимум 2 символа', maxMessage: 'Длина фамилии должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'edit_user'])]
     #[Groups(groups: ['registration', 'edit_user'])]
     private $surname = null;
 
     /** @OA\Property(type="string") */
-    #[Assert\Length(min: 2, max: 20, groups: ['registration', 'edit_user'])]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'Длина отчества должна быть минимум 2 символа', maxMessage: 'Длина отчества должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'edit_user'])]
     #[Groups(groups: ['registration', 'edit_user'])]
     private $patronymic = null;
 
     /** @OA\Property(type="string") */
+    #[Assert\Length(min: 5, max: 20, minMessage: 'Длина телефона должна быть минимум 5 символов', maxMessage: 'Длина телефона должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'edit_user'])]
     #[Groups(groups: ['registration', 'edit_user'])]
     private $phone;

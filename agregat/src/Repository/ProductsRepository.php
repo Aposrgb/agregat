@@ -69,10 +69,27 @@ class ProductsRepository extends ServiceEntityRepository
         }
     }
 
-
-    public function getProductsByFilter(ProductsFilter $productsFilter): Paginator
+    public function getProductsByFilter(ProductsFilter $productsFilter): array
     {
         $qb = $this->createQueryBuilder('p');
+        return $this->getQueryBuilderByFilter($productsFilter, $qb)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getProductsPaginationByFilter(ProductsFilter $productsFilter): Paginator
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        return new Paginator($this->getQueryBuilderByFilter($productsFilter, $qb)
+            ->setFirstResult($productsFilter->getPagination()->getFirstMaxResult())
+            ->setMaxResults($productsFilter->getPagination()->getLimit())
+        );
+
+    }
+
+    public function getQueryBuilderByFilter(ProductsFilter $productsFilter, QueryBuilder $qb): QueryBuilder
+    {
         if ($productsFilter->getName()) {
             $this->searchByName($qb, $productsFilter->getName());
             $qb
@@ -117,11 +134,11 @@ class ProductsRepository extends ServiceEntityRepository
                 ->andWhere('p.rating <= :maxRating')
                 ->setParameter('maxRating', $productsFilter->getMaxRating());
         }
-        return new Paginator($qb
-            ->setFirstResult($productsFilter->getPagination()->getFirstMaxResult())
-            ->setMaxResults($productsFilter->getPagination()->getLimit())
-        );
-
+        $price = $productsFilter->getPrice();
+        if ($price == 1 or $price == -1) {
+            $qb->orderBy('p.price', $price == 1 ? 'ASC' : 'DESC');
+        }
+        return $qb;
     }
 
     public function save(Products $entity, bool $flush = false): void

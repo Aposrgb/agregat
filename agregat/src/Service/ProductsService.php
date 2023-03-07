@@ -5,11 +5,14 @@ namespace App\Service;
 use App\Entity\Categories;
 use App\Entity\Products;
 use App\Helper\Exception\ApiException;
+use App\Helper\Filter\PaginationFilter;
 use App\Helper\Filter\ProductsFilter;
 use App\Helper\Mapped\ProductFilter;
+use App\Repository\CommentsRepository;
 use App\Repository\ProductsRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 
 class ProductsService
 {
@@ -24,8 +27,43 @@ class ProductsService
     public function __construct(
         protected ProductsRepository $productsRepository,
         protected FileUploadService  $fileUploadService,
+        protected CommentsRepository $commentsRepository,
     )
     {
+    }
+
+    /**
+     * @param Products[] $products
+     * @return Products[]
+     *
+     */
+    public function getProductsByPopularity(array $products, PaginationFilter $filter, bool $orderByAsc): array
+    {
+        $productCountComment = [];
+        $productIds = array_map(fn(Products $product) => $product->getId(), $products);
+        $comments = $this->commentsRepository->findByProductId($productIds);
+        foreach ($products as $index => $product) {
+            $isHaveComment = false;
+            foreach ($comments as $comment) {
+                if ($product->getId() == $comment['id']) {
+                    $isHaveComment = true;
+                    $productCountComment[$index] = $comment['count'];
+                }
+            }
+            if(!$isHaveComment){
+                $productCountComment[$index] = 0;
+            }
+        }
+        if ($orderByAsc) {
+            asort($productCountComment, SORT_NUMERIC);
+        } else {
+            arsort($productCountComment, SORT_NUMERIC);
+        }
+        $data = [];
+        foreach ($productCountComment as $index => $item) {
+            $data[] = $products[$index];
+        }
+        return array_slice($data, $filter->getFirstMaxResult(), $filter->getLimit());
     }
 
     /**
@@ -39,7 +77,7 @@ class ProductsService
             if ($productsFilter->getIsActual()) {
                 $isFilter = $product->isIsActual() == $productsFilter->getIsActual();
             }
-            if($productsFilter->getCategory() && $product->getCategories()){
+            if ($productsFilter->getCategory() && $product->getCategories()) {
                 $isFilter = $product->getCategories()->getId() == $productsFilter->getCategory();
             }
             return $isFilter;

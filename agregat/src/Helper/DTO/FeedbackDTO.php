@@ -15,8 +15,8 @@ class FeedbackDTO
     private $name = null;
 
     /** @OA\Property(type="string") */
-    #[Assert\NotBlank(groups: ['create_feedback', 'create_call'])]
-    #[Assert\Type(type: 'string', groups: ['create_feedback', 'create_call'])]
+    #[Assert\NotBlank(groups: ['create_feedback'])]
+    #[Assert\Type(type: 'string', groups: ['create_feedback'])]
     #[Groups(['create_feedback'])]
     private $phone = null;
 

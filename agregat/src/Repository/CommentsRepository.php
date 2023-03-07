@@ -21,6 +21,20 @@ class CommentsRepository extends ServiceEntityRepository
         parent::__construct($registry, Comments::class);
     }
 
+    public function findByProductId(array $ids): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb
+            ->join('c.product', 'p')
+            ->select('p.id as id, count(c.id) as count')
+            ->where($qb->expr()->in('p.id', ':ids'))
+            ->setParameter('ids', $ids)
+            ->groupBy('p.id')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function save(Comments $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

@@ -35,6 +35,12 @@ class ProductsFilter
 
     private $name;
 
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
+    private $popularity;
+
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
+    private $price;
+
     public function __construct()
     {
         $this->pagination = new PaginationFilter();
@@ -210,6 +216,42 @@ class ProductsFilter
     public function setCategory($category)
     {
         $this->category = $category;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param mixed $price
+     * @return ProductsFilter
+     */
+    public function setPrice($price)
+    {
+        $this->price = (int)$price;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPopularity()
+    {
+        return $this->popularity;
+    }
+
+    /**
+     * @param mixed $popularity
+     * @return ProductsFilter
+     */
+    public function setPopularity($popularity)
+    {
+        $this->popularity = (int)$popularity;
         return $this;
     }
 

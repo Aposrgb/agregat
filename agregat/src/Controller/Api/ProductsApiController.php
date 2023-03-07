@@ -99,6 +99,20 @@ class ProductsApiController extends AbstractController
      *     @OA\Schema(type="string")
      * )
      *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="orderBy[price]",
+     *     description="Сортировка продуктов по цене, -1 по убыванию, 1 - возрастание",
+     *     @OA\Schema(type="integer", enum={-1, 1})
+     * )
+     *
+     * @OA\Parameter(
+     *     in="query",
+     *     name="orderBy[popularity]",
+     *     description="Сортировка продуктов по популярности, -1 по убыванию, 1 - возрастание",
+     *     @OA\Schema(type="integer", enum={-1, 1})
+     * )
+     *
      * @OA\Response(
      *     response="400",
      *     description="Not valid data",
@@ -127,22 +141,32 @@ class ProductsApiController extends AbstractController
         SerializerInterface $serializer,
         ValidatorService    $validatorService,
         ProductsRepository  $productsRepository,
+        ProductsService     $productsService,
     ): JsonResponse
     {
         $query = $request->query->all();
         /** @var ProductsFilter $productsFilter */
         $productsFilter = $serializer->deserialize(
             json_encode(
-                array_merge($query, $query['filter'] ?? [], $query['search'] ?? [])
+                array_merge($query, $query['filter'] ?? [], $query['search'] ?? [], $query['orderBy'] ?? [])
             ), ProductsFilter::class, 'json'
         );
         $validatorService->validate($productsFilter, ['filter']);
-        $paginator = $productsRepository->getProductsByFilter($productsFilter);
-        $count = $paginator->count();
+        if ($productsFilter->getPopularity()) {
+            $products = $productsRepository->getProductsByFilter($productsFilter);
+            $count = count($products);
+            $paginator = $productsService->getProductsByPopularity(
+                $products, $productsFilter->getPagination(), $productsFilter->getPopularity() == 1
+            );
+        } else {
+            $paginator = $productsRepository->getProductsPaginationByFilter($productsFilter);
+            $count = $paginator->count();
+            $paginator = $paginator->getQuery()->getResult();
+        }
 
         return $this->json(
             data: [
-                "data" => $paginator->getQuery()->getResult(),
+                "data" => $paginator,
                 "count" => $count,
                 "pageCount" => ceil($count / $productsFilter->getPagination()->getLimit()),
                 "currentPage" => (int)$productsFilter->getPagination()->getPage()
@@ -214,6 +238,7 @@ class ProductsApiController extends AbstractController
      *     description="id - категории",
      *     @OA\Schema(type="integer")
      * )
+     *
      *
      */
     #[Route('/filter', name: 'get_filter', methods: ['GET'])]
