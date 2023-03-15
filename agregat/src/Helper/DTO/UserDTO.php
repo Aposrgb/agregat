@@ -10,42 +10,42 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserDTO
 {
     /** @OA\Property(type="string") */
-    #[Assert\NotBlank(groups: ['registration', 'authorization'])]
-    #[Assert\Email(groups: ['registration', 'authorization', 'edit_user'])]
-    #[Assert\Length(min: 6, max: 30, minMessage: 'Длина имени почты быть минимум 6 символа', maxMessage: 'Длина почты должна быть максимум 30 символов', groups: ['registration', 'authorization', 'edit_user'])]
-    #[Assert\Type(type: 'string', groups: ['registration', 'authorization', 'edit_user'])]
+    #[Assert\NotBlank(message: 'РќРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј', groups: ['registration', 'authorization'])]
+    #[Assert\Email(message: 'РќРµ РІР°Р»РёРґРЅР°СЏ РїРѕС‡С‚Р°', groups: ['registration', 'authorization', 'edit_user'])]
+    #[Assert\Length(min: 6, max: 30, minMessage: 'Р”Р»РёРЅР° РёРјРµРЅРё РїРѕС‡С‚С‹ Р±С‹С‚СЊ РјРёРЅРёРјСѓРј 6 СЃРёРјРІРѕР»Р°', maxMessage: 'Р”Р»РёРЅР° РїРѕС‡С‚С‹ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјР°РєСЃРёРјСѓРј 30 СЃРёРјРІРѕР»РѕРІ', groups: ['registration', 'authorization', 'edit_user'])]
+    #[Assert\Type(type: 'string', message: 'РќРµРІРµСЂРЅС‹Р№ С‚РёРї', groups: ['registration', 'authorization', 'edit_user'])]
     #[Groups(groups: ['registration', 'authorization', 'edit_user'])]
     private $email;
 
     /** @OA\Property(type="string") */
-    #[Assert\NotBlank(groups: ['registration', 'authorization'])]
-    #[Assert\Length(min: 6, max: 30, minMessage: 'Длина пароля должна быть минимум 6 символа', maxMessage: 'Длина пароля должна быть максимум 30 символов', groups: ['registration', 'authorization'])]
-    #[Assert\Type(type: 'string', groups: ['registration', 'authorization'])]
+    #[Assert\NotBlank(message: 'РќРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј', groups: ['registration', 'authorization'])]
+    #[Assert\Length(min: 6, max: 30, minMessage: 'Р”Р»РёРЅР° РїР°СЂРѕР»СЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјРёРЅРёРјСѓРј 6 СЃРёРјРІРѕР»Р°', maxMessage: 'Р”Р»РёРЅР° РїР°СЂРѕР»СЏ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјР°РєСЃРёРјСѓРј 30 СЃРёРјРІРѕР»РѕРІ', groups: ['registration', 'authorization'])]
+    #[Assert\Type(type: 'string', message: 'РќРµРІРµСЂРЅС‹Р№ С‚РёРї',  groups: ['registration', 'authorization'])]
     #[Groups(groups: ['registration', 'authorization'])]
     private $password;
 
     /** @OA\Property(type="string") */
-    #[Assert\NotBlank(groups: ['registration'])]
-    #[Assert\Length(min: 2, max: 20, minMessage: 'Длина имени должна быть минимум 2 символа', maxMessage: 'Длина имени должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
+    #[Assert\NotBlank(message: 'РќРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј', groups: ['registration'])]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'Р”Р»РёРЅР° РёРјРµРЅРё РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјРёРЅРёРјСѓРј 2 СЃРёРјРІРѕР»Р°', maxMessage: 'Р”Р»РёРЅР° РёРјРµРЅРё РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјР°РєСЃРёРјСѓРј 20 СЃРёРјРІРѕР»РѕРІ', groups: ['registration', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'edit_user'])]
     #[Groups(groups: ['registration', 'edit_user'])]
     private $name = null;
 
     /** @OA\Property(type="string") */
-    #[Assert\NotBlank(groups: ['registration'])]
-    #[Assert\Length(min: 2, max: 20, minMessage: 'Длина фамилии должна быть минимум 2 символа', maxMessage: 'Длина фамилии должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
+    #[Assert\NotBlank(message: 'РќРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј',groups: ['registration'])]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'Р”Р»РёРЅР° С„Р°РјРёР»РёРё РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјРёРЅРёРјСѓРј 2 СЃРёРјРІРѕР»Р°', maxMessage: 'Р”Р»РёРЅР° С„Р°РјРёР»РёРё РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјР°РєСЃРёРјСѓРј 20 СЃРёРјРІРѕР»РѕРІ', groups: ['registration', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'edit_user'])]
     #[Groups(groups: ['registration', 'edit_user'])]
     private $surname = null;
 
     /** @OA\Property(type="string") */
-    #[Assert\Length(min: 2, max: 20, minMessage: 'Длина отчества должна быть минимум 2 символа', maxMessage: 'Длина отчества должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'Р”Р»РёРЅР° РѕС‚С‡РµСЃС‚РІР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјРёРЅРёРјСѓРј 2 СЃРёРјРІРѕР»Р°', maxMessage: 'Р”Р»РёРЅР° РѕС‚С‡РµСЃС‚РІР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјР°РєСЃРёРјСѓРј 20 СЃРёРјРІРѕР»РѕРІ', groups: ['registration', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'edit_user'])]
     #[Groups(groups: ['registration', 'edit_user'])]
     private $patronymic = null;
 
     /** @OA\Property(type="string") */
-    #[Assert\Length(min: 5, max: 20, minMessage: 'Длина телефона должна быть минимум 5 символов', maxMessage: 'Длина телефона должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
+    #[Assert\Length(min: 5, max: 20, minMessage: 'Р”Р»РёРЅР° С‚РµР»РµС„РѕРЅР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјРёРЅРёРјСѓРј 5 СЃРёРјРІРѕР»РѕРІ', maxMessage: 'Р”Р»РёРЅР° С‚РµР»РµС„РѕРЅР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РјР°РєСЃРёРјСѓРј 20 СЃРёРјРІРѕР»РѕРІ', groups: ['registration', 'edit_user'])]
     #[Assert\Type(type: 'string', groups: ['registration', 'edit_user'])]
     #[Groups(groups: ['registration', 'edit_user'])]
     private $phone;

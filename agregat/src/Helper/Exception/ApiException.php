@@ -57,7 +57,7 @@ class ApiException extends HttpException
                 'status' => $this->status,
                 'message' => $this->message,
                 'detail' => $this->detail,
-                'validationError' => $this->validationError
+                'validationError' => mb_convert_encoding($this->validationError, 'UTF-8',  "Windows-1251")
             ]
         ];
     }

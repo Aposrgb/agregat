@@ -34,7 +34,7 @@ class ValidatorService
         $validationError['body'] = $invalid_field;
 
         if (count($bodyError) > 0)
-            throw new ApiException(message: 'Ошибки при выполнении запроса', validationError: $validationError, status: Response::HTTP_BAD_REQUEST);
+            throw new ApiException(message: $invalid_field[0]['name'] . ": " . $invalid_field[0]['message'], validationError: $validationError, status: Response::HTTP_BAD_REQUEST);
     }
 
     public function checkRequestValidationNotNull($field, $fieldName = null): void
