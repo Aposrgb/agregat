@@ -12,10 +12,13 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-         if ($this->getUser()) {
-             return $this->redirectToRoute('app_news_index');
-         }
-
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_news_index');
+        }
+        $past = time() - 3600;
+        foreach ($_COOKIE as $key => $value) {
+            setcookie($key, $value, $past, '/');
+        }
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
