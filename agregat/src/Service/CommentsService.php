@@ -27,7 +27,7 @@ class CommentsService
             }
         }
         if ($countComments >= self::LIMIT_COMMENTS_USER) {
-            throw new ApiException(message: 'Превышен лимит комментариев к продукту');
+            throw new ApiException(message: 'РџСЂРµРІС‹С€РµРЅ Р»РёРјРёС‚ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ Рє РїСЂРѕРґСѓРєС‚Сѓ');
         }
     }
 
