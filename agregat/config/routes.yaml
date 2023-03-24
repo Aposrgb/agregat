@@ -22,8 +22,3 @@ route1:
     defaults: { _controller: 'App\Controller\Admin\IndexController::index' }
     requirements:
         req: ".+"
-route2:
-    path: /{req}
-    defaults: { _controller: 'App\Controller\IndexController::index' }
-    requirements:
-        req: ".+"
