@@ -26,15 +26,11 @@ class ImportService
         $data = $data->getContent();
         $data = str_getcsv($data, "\n");
         $brands = $this->brandRepository->findAll();
-        $brandNames = array_map(function (Brand $brand) {
-            return $brand->getName();
-        }, $brands);
         $products = $this->productsRepository->findAll();
-        $productNames = array_map(function (Products $products) {
-            return $products->getTitle();
-        }, $products);
+        $brandNames = array_map(fn (Brand $brand) => $brand->getName(), $brands);
+        $productNames = array_map(fn (Products $products) => $products->getTitle(), $products);
         $i = 12;
-        for ($i; $i < count($data); $i++) {
+        for (; $i < count($data); $i++) {
             $csv = str_getcsv($data[$i], ';');
             if ($indexName = array_search($csv[1], $productNames)) {
                 $product = $products[$indexName];
