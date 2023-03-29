@@ -55,7 +55,7 @@ class Products
     #[Groups(['get_products', 'get_product_detail', 'get_baskets'])]
     private ?float $discountPrice = null;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Basket::class)]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Basket::class, cascade: ['remove'])]
     private Collection $baskets;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'favoritesProducts')]
