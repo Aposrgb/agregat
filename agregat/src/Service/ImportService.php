@@ -27,31 +27,40 @@ class ImportService
         $data = str_getcsv($data, "\n");
         $brands = $this->brandRepository->findAll();
         $products = $this->productsRepository->findAll();
-        $brandNames = array_map(fn (Brand $brand) => $brand->getName(), $brands);
-        $productNames = array_map(fn (Products $products) => $products->getTitle(), $products);
+        $brandNames = array_map(fn(Brand $brand) => $brand->getName(), $brands);
+        $productNames = array_map(fn(Products $product) => $product->getTitle(), $products);
+        $productIds = array_map(fn(Products $product) => $product->getId(), $products);
+        $foundedProducts = [];
         $i = 12;
         for (; $i < count($data); $i++) {
             $csv = str_getcsv($data[$i], ';');
-            if ($indexName = array_search($csv[1], $productNames)) {
+            $name = trim($csv[0]);
+            if (($indexName = array_search($name, $productNames)) !== false) {
                 $product = $products[$indexName];
+                $foundedProducts[] = $productIds[$indexName];
             } else {
-                $description =
-                    "Номенклатура.Код: " . ($csv[3] ?? '-') . "\n" .
-                    "Номенклатура.Артикул: " . ($csv[4] ?? '-') . "\n";
-
-                $product = (new Products())
-                    ->setBalanceStock($this->parsePriceInteger($csv[2]))
-                    ->setDescription($description);
+                $product = new Products();
+                $this->entityManager->persist($product);
             }
-            if ($csv[5] != '' && !empty($csv[5])) {
-                if ($index = array_search($csv[5], $brandNames)) {
+            $product
+                ->setTitle($name)
+                ->setArticle($csv[3])
+                ->setBalanceStock((int)$csv[1])
+                ->setDiscountPrice($this->parsePriceFloat($csv[7]))
+                ->setPrice($this->parsePriceFloat($csv[5]))
+                ->setCode1C($csv[2]);
+            if ($csv[4] != '' && !empty($csv[4])) {
+                if ($index = array_search($csv[4], $brandNames)) {
                     $product->setBrand($brands[$index]);
                 } else {
-                    $product->setBrand((new Brand())->setName($csv[5]));
+                    $product->setBrand((new Brand())->setName($csv[4]));
                 }
             }
-
-            $this->entityManager->persist($product->setPrice($this->parsePriceFloat($csv[6])));
+        }
+        $resIds = array_diff($productIds, $foundedProducts);
+        $removedProducts = $this->productsRepository->findBy(['id' => $resIds]);
+        foreach ($removedProducts as $product){
+            $this->entityManager->remove($product);
         }
         $this->entityManager->flush();
     }

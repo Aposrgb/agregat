@@ -89,14 +89,14 @@ class Products
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private ?array $bundle = [];
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comments::class)]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comments::class, cascade: ['remove'])]
     #[Groups(['get_product_detail'])]
     private Collection $comments;
 
     #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'products')]
     private ?Brand $brand = null;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Purchase::class)]
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Purchase::class, cascade: ['remove'])]
     private Collection $purchases;
 
     #[ORM\Column(length: 255, nullable: true)]
