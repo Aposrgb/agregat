@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Brand;
 use App\Entity\Products;
 use App\Repository\BrandRepository;
+use App\Repository\CategoriesRepository;
 use App\Repository\ProductsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -16,6 +17,7 @@ class ImportService
         protected ParameterBagInterface  $parameterBag,
         protected BrandRepository        $brandRepository,
         protected EntityManagerInterface $entityManager,
+        protected CategoriesRepository   $categoriesRepository,
         protected ProductsRepository     $productsRepository
     )
     {
@@ -30,6 +32,7 @@ class ImportService
         $brandNames = array_map(fn(Brand $brand) => $brand->getName(), $brands);
         $productNames = array_map(fn(Products $product) => $product->getTitle(), $products);
         $productIds = array_map(fn(Products $product) => $product->getId(), $products);
+        $category = $this->categoriesRepository->findOneBy(['title' => 'Без категории']);
         $foundedProducts = [];
         $i = 12;
         for (; $i < count($data); $i++) {
@@ -38,8 +41,14 @@ class ImportService
             if (($indexName = array_search($name, $productNames)) !== false) {
                 $product = $products[$indexName];
                 $foundedProducts[] = $productIds[$indexName];
+                if (!$product->getCategories() && $category) {
+                    $product->setCategories($category);
+                }
             } else {
                 $product = new Products();
+                if ($category) {
+                    $product->setCategories($category);
+                }
                 $this->entityManager->persist($product);
             }
             $product
@@ -59,7 +68,7 @@ class ImportService
         }
         $resIds = array_diff($productIds, $foundedProducts);
         $removedProducts = $this->productsRepository->findBy(['id' => $resIds]);
-        foreach ($removedProducts as $product){
+        foreach ($removedProducts as $product) {
             $this->entityManager->remove($product);
         }
         $this->entityManager->flush();
