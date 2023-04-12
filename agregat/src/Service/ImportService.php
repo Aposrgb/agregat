@@ -51,12 +51,20 @@ class ImportService
                 }
                 $this->entityManager->persist($product);
             }
+            if (count($csv) > 7) {
+                $product
+                    ->setDiscountPrice($this->parsePriceFloat($csv[7]));
+            }
+            $description =
+                "Код: " . ($csv[2] ?? '-') . "\n" .
+                "Артикул: " . ($csv[3] ?? '-') . "\n";
+
             $product
-                ->setTitle($name)
-                ->setArticle($csv[3])
-                ->setBalanceStock((int)$csv[1])
-                ->setDiscountPrice($this->parsePriceFloat($csv[7]))
+                ->setDescription($description)
                 ->setPrice($this->parsePriceFloat($csv[5]))
+                ->setBalanceStock($this->parsePriceInteger($csv[1]))
+                ->setArticle($csv[3])
+                ->setTitle($name)
                 ->setCode1C($csv[2]);
             if ($csv[4] != '' && !empty($csv[4])) {
                 if ($index = array_search($csv[4], $brandNames)) {
@@ -74,7 +82,8 @@ class ImportService
         $this->entityManager->flush();
     }
 
-    private function parsePriceInteger(string $value): ?int
+    private
+    function parsePriceInteger(string $value): ?int
     {
         $value = $this->parsePrice($value);
         if ($value) {
@@ -83,7 +92,8 @@ class ImportService
         return null;
     }
 
-    private function parsePriceFloat(string $value): ?float
+    private
+    function parsePriceFloat(string $value): ?float
     {
         $value = $this->parsePrice($value);
         if ($value) {
@@ -92,7 +102,8 @@ class ImportService
         return null;
     }
 
-    private function parsePrice(string $value): ?string
+    private
+    function parsePrice(string $value): ?string
     {
         $value = explode('руб', $value)[0] ?? null;
         if ($value) {

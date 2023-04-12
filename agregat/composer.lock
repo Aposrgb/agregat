@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a60762e2f9f6301080af825fc6766bd",
+    "content-hash": "0b00a85e05281e69fe465be4807a7b7e",
     "packages": [
         {
             "name": "aspera/xlsx-reader",
