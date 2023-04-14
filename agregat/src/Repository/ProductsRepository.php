@@ -137,6 +137,8 @@ class ProductsRepository extends ServiceEntityRepository
         $price = $productsFilter->getPrice();
         if ($price == 1 or $price == -1) {
             $qb->orderBy('p.price', $price == 1 ? 'ASC' : 'DESC');
+        } else {
+            $qb->orderBy('p.price', 'DESC');
         }
         return $qb;
     }

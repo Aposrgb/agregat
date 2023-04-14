@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Brand;
+use App\Entity\Categories;
 use App\Entity\Products;
 use App\Repository\BrandRepository;
 use App\Repository\CategoriesRepository;
@@ -10,6 +11,7 @@ use App\Repository\ProductsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 
 class ImportService
 {
@@ -38,6 +40,9 @@ class ImportService
         for (; $i < count($data); $i++) {
             $csv = str_getcsv($data[$i], ';');
             $name = trim($csv[0]);
+            if (empty($csv[1])) {
+                continue;
+            }
             if (($indexName = array_search($name, $productNames)) !== false) {
                 $product = $products[$indexName];
                 $foundedProducts[] = $productIds[$indexName];
