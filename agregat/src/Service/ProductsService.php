@@ -50,7 +50,7 @@ class ProductsService
                     $productCountComment[$index] = $comment['count'];
                 }
             }
-            if(!$isHaveComment){
+            if (!$isHaveComment) {
                 $productCountComment[$index] = 0;
             }
         }
@@ -88,6 +88,9 @@ class ProductsService
             }
             if ($subCategories = $product->getSubCategories()) {
                 $productFilter->addSubCategory($subCategories);
+            }
+            if ($brand = $product->getBrand()) {
+                $productFilter->addBrand($brand);
             }
             if ($price = $product->getPrice()) {
                 $productFilter->setMinPrice(min($price, $productFilter->getMinPrice()));

@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Helper\Exception\ApiException;
 use App\Repository\UserRepository;
+use Guzzle\Http\Client;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserService
@@ -21,6 +22,14 @@ class UserService
         protected UserRepository $userRepository,
     )
     {
+    }
+
+    public function setUserDataByInn(?string $inn, User $user): void
+    {
+        if(!$inn){
+            return;
+        }
+        $client = new Client();
     }
 
     public function getUserById(int $id): User

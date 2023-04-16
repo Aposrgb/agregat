@@ -86,11 +86,14 @@ class UserApiController extends AbstractController
         ValidatorService       $validator,
         UserMapper             $userMapper,
         EntityManagerInterface $entityManager,
+        UserService            $userService,
     ): JsonResponse
     {
+        /** @var UserDTO $userDTO */
         $userDTO = $serializer->deserialize($request->getContent(), UserDTO::class, 'json');
         $validator->validate($userDTO, ['edit_user']);
         $user = $userMapper->dtoToEntity($userDTO, $this->getUser());
+//        $userService->setUserDataByInn($userDTO->getInn(), $user);
         $entityManager->flush();
         return $this->json(
             data: ['data' => $user],

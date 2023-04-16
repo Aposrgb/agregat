@@ -80,6 +80,11 @@ class UserDTO
     #[Groups(groups: ['edit_user'])]
     private $dateBirth = null;
 
+    /** @OA\Property(type="string") */
+    #[Assert\Type(type: 'string', groups: ['edit_user'])]
+    #[Groups(groups: ['edit_user'])]
+    private $inn  = null;
+
     /**
      * @return mixed
      */
@@ -293,6 +298,24 @@ class UserDTO
     public function setDateBirth($dateBirth)
     {
         $this->dateBirth = $dateBirth;
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getInn()
+    {
+        return $this->inn;
+    }
+
+    /**
+     * @param null $inn
+     * @return UserDTO
+     */
+    public function setInn($inn)
+    {
+        $this->inn = $inn;
         return $this;
     }
 

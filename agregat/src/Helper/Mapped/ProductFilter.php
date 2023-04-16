@@ -2,6 +2,7 @@
 
 namespace App\Helper\Mapped;
 
+use App\Entity\Brand;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,6 +16,10 @@ class ProductFilter
     /** @OA\Property(type="array", @OA\Items(ref=@Model(type="App\Entity\SubCategories", groups={"get_filter"}))) */
     #[Groups(['get_filter'])]
     private array $subCategories = [];
+
+    /** @OA\Property(type="array", @OA\Items(ref=@Model(type="App\Entity\Brand", groups={"get_filter"}))) */
+    #[Groups(['get_filter'])]
+    private array $brands = [];
 
     #[Groups(['get_filter'])]
     private ?int $minPrice = 0;
@@ -136,6 +141,25 @@ class ProductFilter
     public function setMaxRating(?float $maxRating): ProductFilter
     {
         $this->maxRating = $maxRating;
+        return $this;
+    }
+
+    public function addBrand(Brand $brand): self
+    {
+        if (!in_array($brand, $this->brands)) {
+            $this->brands[] = $brand;
+        }
+        return $this;
+    }
+
+    public function getBrands(): array
+    {
+        return $this->brands;
+    }
+
+    public function setBrands(array $brands): ProductFilter
+    {
+        $this->brands = $brands;
         return $this;
     }
 }

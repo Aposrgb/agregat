@@ -102,14 +102,20 @@ class ProductsRepository extends ServiceEntityRepository
         if ($productsFilter->getCategoryId()) {
             $qb
                 ->join('p.categories', 'c')
-                ->andWhere($qb->expr()->in('c.id', ':ids'))
-                ->setParameter('ids', explode(',', $productsFilter->getCategoryId()));
+                ->andWhere($qb->expr()->in('c.id', ':categoryIds'))
+                ->setParameter('categoryIds', explode(',', $productsFilter->getCategoryId()));
         }
         if ($productsFilter->getSubCategoryId()) {
             $qb
                 ->join('p.subCategories', 'sc')
-                ->andWhere($qb->expr()->in('sc.id', ':ids'))
-                ->setParameter('ids', explode(',', $productsFilter->getSubCategoryId()));
+                ->andWhere($qb->expr()->in('sc.id', ':subCategoryIds'))
+                ->setParameter('subCategoryIds', explode(',', $productsFilter->getSubCategoryId()));
+        }
+        if ($productsFilter->getBrand()) {
+            $qb
+                ->join('p.brand', 'br')
+                ->andWhere($qb->expr()->in('br.id', ':brandIds'))
+                ->setParameter('brandIds', explode(',', $productsFilter->getBrand()));
         }
         if ($productsFilter->getIsActual()) {
             $qb->andWhere('p.isActual = true');

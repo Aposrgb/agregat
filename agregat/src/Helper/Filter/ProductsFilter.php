@@ -19,6 +19,9 @@ class ProductsFilter
     private $categoryId;
 
     #[Assert\Callback(callback: [ValidatorService::class, 'validateArrayInteger'], groups: ['filter'])]
+    private $brand;
+
+    #[Assert\Callback(callback: [ValidatorService::class, 'validateArrayInteger'], groups: ['filter'])]
     private $subCategoryId;
 
     #[Assert\Callback(callback: [ValidatorService::class, 'validateInteger'], groups: ['filter'])]
@@ -252,6 +255,24 @@ class ProductsFilter
     public function setPopularity($popularity)
     {
         $this->popularity = (int)$popularity;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBrand()
+    {
+        return $this->brand;
+    }
+
+    /**
+     * @param mixed $brand
+     * @return ProductsFilter
+     */
+    public function setBrand($brand)
+    {
+        $this->brand = $brand;
         return $this;
     }
 
