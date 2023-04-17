@@ -60,6 +60,11 @@ class ImportService
                 $product
                     ->setDiscountPrice($this->parsePriceFloat($csv[7]));
             }
+            if($this->parsePriceFloat($csv[5]) == 0 and $this->parsePriceInteger($csv[1]) == 0){
+                $csv[0] = $csv[0] . $csv[1];
+                unset($csv[1]);
+                $csv = array_values($csv);
+            }
             $description =
                 "Код: " . ($csv[2] ?? '-') . "\n" .
                 "Артикул: " . ($csv[3] ?? '-') . "\n";
@@ -79,11 +84,12 @@ class ImportService
                 }
             }
         }
-        $resIds = array_diff($productIds, $foundedProducts);
-        $removedProducts = $this->productsRepository->findBy(['id' => $resIds]);
-        foreach ($removedProducts as $product) {
-            $this->entityManager->remove($product);
-        }
+
+//        $resIds = array_diff($productIds, $foundedProducts);
+//        $removedProducts = $this->productsRepository->findBy(['id' => $resIds]);
+//        foreach ($removedProducts as $product) {
+//            $this->entityManager->remove($product);
+//        }
         $this->entityManager->flush();
     }
 
