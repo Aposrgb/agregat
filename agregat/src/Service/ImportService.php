@@ -11,6 +11,7 @@ use App\Repository\ProductsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\SerializerInterface;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 
 class ImportService
@@ -20,7 +21,8 @@ class ImportService
         protected BrandRepository        $brandRepository,
         protected EntityManagerInterface $entityManager,
         protected CategoriesRepository   $categoriesRepository,
-        protected ProductsRepository     $productsRepository
+        protected ProductsRepository     $productsRepository,
+        protected SerializerInterface    $serializer,
     )
     {
     }
@@ -60,14 +62,13 @@ class ImportService
                 $product
                     ->setDiscountPrice($this->parsePriceFloat($csv[7]));
             }
-            if($this->parsePriceFloat($csv[5]) == 0 and $this->parsePriceInteger($csv[1]) == 0){
+            if ($this->parsePriceFloat($csv[5]) == 0 and $this->parsePriceInteger($csv[1]) == 0) {
                 $csv[0] = $csv[0] . $csv[1];
                 unset($csv[1]);
                 $csv = array_values($csv);
             }
             $description =
-                "Код: " . ($csv[2] ?? '-') . "\n" .
-                "Артикул: " . ($csv[3] ?? '-') . "\n";
+                "Код: " . ($csv[2] ?? '-') . "<br>";
 
             $product
                 ->setDescription($description)
@@ -85,12 +86,13 @@ class ImportService
             }
         }
 
-//        $resIds = array_diff($productIds, $foundedProducts);
-//        $removedProducts = $this->productsRepository->findBy(['id' => $resIds]);
-//        foreach ($removedProducts as $product) {
-//            $this->entityManager->remove($product);
-//        }
+        $resIds = array_diff($productIds, $foundedProducts);
+        $removedProducts = $this->productsRepository->findBy(['id' => $resIds]);
+        foreach ($removedProducts as $product) {
+            $this->entityManager->remove($product);
+        }
         $this->entityManager->flush();
+        shell_exec('php bin/console cache:clear');
     }
 
     private

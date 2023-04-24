@@ -28,26 +28,4 @@ class ProductsDenormalizer implements ContextAwareDenormalizerInterface
         return null;
     }
 
-    public function denormalizeXml($data, string $type, string $format = null, array $context = [])
-    {
-        $products = [];
-        $allProducts = $this->productsRepository->findAll();
-        if (is_array($data) && array_key_exists('employee', $data)) {
-            $empls = $data['employee'];
-            foreach ($empls as $item) {
-                if (is_array($item)) {
-                    $staff = $this->fillEntityFromExternalXml($item, $allProducts, $organization);
-                    $allProducts[$item['employeeGUID']] = $staff;
-                    $products[$item['employeeGUID']] = $staff;
-                } else {
-                    $staff = $this->fillEntityFromExternalXml($empls, $allProducts, $organization);
-                    $allProducts[$item['employeeGUID']] = $staff;
-                    $products[$item['employeeGUID']] = $staff;
-                    break;
-                }
-            }
-        }
-        return $products;
-    }
-
 }
