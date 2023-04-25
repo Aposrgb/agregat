@@ -85,14 +85,12 @@ class ImportService
                 }
             }
         }
-
         $resIds = array_diff($productIds, $foundedProducts);
         $removedProducts = $this->productsRepository->findBy(['id' => $resIds]);
         foreach ($removedProducts as $product) {
             $this->entityManager->remove($product);
         }
         $this->entityManager->flush();
-        shell_exec('php bin/console cache:clear');
     }
 
     private
