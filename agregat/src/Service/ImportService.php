@@ -41,6 +41,17 @@ class ImportService
         $i = 12;
         for (; $i < count($data); $i++) {
             $csv = str_getcsv($data[$i], ';');
+            if ($this->parsePriceFloat($csv[5]) == 0 and $this->parsePriceInteger($csv[1]) == 0) {
+                $csvRev = array_reverse($csv);
+                $csv = [
+                    join('', array_splice($csvRev, 6)),
+                    $csvRev[5],
+                    $csvRev[4],
+                    $csvRev[3],
+                    $csvRev[2],
+                    $csvRev[1],
+                ];
+            }
             $name = trim($csv[0]);
             if (empty($csv[1])) {
                 continue;
@@ -57,15 +68,6 @@ class ImportService
                     $product->setCategories($category);
                 }
                 $this->entityManager->persist($product);
-            }
-            if (count($csv) > 7) {
-                $product
-                    ->setDiscountPrice($this->parsePriceFloat($csv[7]));
-            }
-            if ($this->parsePriceFloat($csv[5]) == 0 and $this->parsePriceInteger($csv[1]) == 0) {
-                $csv[0] = $csv[0] . $csv[1];
-                unset($csv[1]);
-                $csv = array_values($csv);
             }
             $description =
                 "Код: " . ($csv[2] ?? '-') . "<br>";
@@ -91,6 +93,7 @@ class ImportService
             $this->entityManager->remove($product);
         }
         $this->entityManager->flush();
+        shell_exec('php bin/console cache:clear');
     }
 
     private
