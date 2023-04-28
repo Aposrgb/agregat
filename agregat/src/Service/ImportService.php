@@ -81,10 +81,13 @@ class ImportService
                 ->setTitle($name)
                 ->setCode1C($csv[2]);
             if ($csv[4] != '' && !empty($csv[4])) {
-                if ($index = array_search($csv[4], $brandNames)) {
+                if (($index = array_search($csv[4], $brandNames)) !== false) {
                     $product->setBrand($brands[$index]);
                 } else {
-                    $product->setBrand((new Brand())->setName($csv[4]));
+                    $brand = (new Brand())->setName($csv[4]);
+                    $brands[] = $brand;
+                    $product->setBrand($brand);
+                    $brandNames[] = $brand->getName();
                 }
             }
         }
@@ -97,8 +100,7 @@ class ImportService
         shell_exec('php bin/console cache:clear');
     }
 
-    private
-    function parsePriceInteger(string $value): ?int
+    private function parsePriceInteger(string $value): ?int
     {
         $value = $this->parsePrice($value);
         if ($value) {
@@ -107,8 +109,7 @@ class ImportService
         return null;
     }
 
-    private
-    function parsePriceFloat(string $value): ?float
+    private function parsePriceFloat(string $value): ?float
     {
         $value = $this->parsePrice($value);
         if ($value) {
@@ -117,8 +118,7 @@ class ImportService
         return null;
     }
 
-    private
-    function parsePrice(string $value): ?string
+    private function parsePrice(string $value): ?string
     {
         $value = explode('руб', $value)[0] ?? null;
         if ($value) {
