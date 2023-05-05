@@ -32,6 +32,8 @@ class ProductsType extends AbstractType
             ->add('purchaseBalance', options: ['label' => 'Остаток покупок'])
             ->add('keyWords', options: ['label' => 'Ключевые слова'])
             ->add('article', options: ['label' => 'Артикул'])
+            ->add('categories',  NumberType::class,options: ['label' => 'Категория', 'mapped' => false])
+            ->add('subcategories', NumberType::class, options: ['label' => 'Подкатегория', 'mapped' => false])
         ;
     }
 

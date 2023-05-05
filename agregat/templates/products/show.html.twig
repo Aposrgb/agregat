@@ -51,6 +51,15 @@
                 <th>Артикул</th>
                 <td>{{ product.article }}</td>
             </tr>
+            <tr>
+                <th>Категория</th>
+                <td>{{ product.categories.title ?? ''}}</td>
+            </tr>
+            <tr>
+                <th>Подкатегория</th>
+                <td>{{ product.subCategories.title ?? ''}}</td>
+            </tr>
+
         </tbody>
     </table>
 

@@ -4,7 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\Products;
 use App\Form\ProductsType;
+use App\Repository\CategoriesRepository;
 use App\Repository\ProductsRepository;
+use App\Repository\SubCategoriesRepository;
 use App\Service\FileUploadService;
 use App\Service\ProductsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,12 +74,19 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_products_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Products $product, ProductsRepository $productsRepository, FileUploadService $fileUploadService): Response
+    public function edit(Request $request, Products $product, ProductsRepository $productsRepository, CategoriesRepository $categoriesRepository, SubCategoriesRepository $subCategoriesRepository, FileUploadService $fileUploadService): Response
     {
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $request->request->all()['products'];
+            if (!empty($data['categories'])) {
+                $product->setCategories($categoriesRepository->find($data['categories']));
+            }
+            if (!empty($data['subcategories'])) {
+                $product->setSubCategories($subCategoriesRepository->find($data['subcategories']));
+            }
             $img = $request->files->get('products')['img'] ?? null;
             if ($img) {
                 if ($product->getImg()) {

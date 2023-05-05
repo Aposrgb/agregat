@@ -18,5 +18,59 @@
     {{ form_row(form.purchaseBalance) }}
     {{ form_row(form.keyWords) }}
     {{ form_row(form.article) }}
+    <p>Текущая категория: {{ product.categories.title ?? '' }}</p>
+<div>
+    <label for="products_categories">Категория</label>
+    <select class="form-control" id="products_categories" {% if not product.id %}required{% endif %} name="products[categories]">
+    </select>
+</div>
+    <p>Текущая подкатегория: {{ product.subcategories.title ?? '' }}</p>
+<div>
+    <label for="products_subcategories">Подкатегория</label>
+    <select class="form-control" id="products_subcategories" name="products[subcategories]">
+    </select>
+</div>
     <button class="btn btn-success">{{ button_label|default('Сохранить') }}</button>
+<div hidden>
+    {{ form_row(form.categories, {required:false}) }}
+    {{ form_row(form.subcategories, {required:false}) }}
+</div>
 {{ form_end(form) }}
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        let form = document.querySelector('form');
+        let categorys = await fetch('{{ path('get_category') }}?pagination[limit]=100').then(data => data.json()).then(data => data['data'])
+        let subcategorys = await fetch('{{ path('get_sub_category') }}?pagination[limit]=100').then(data => data.json()).then(data => data['data'])
+        form.addEventListener("submit", (e) => {
+            let inputCategory = document.createElement("input");
+            inputCategory.setAttribute("id", "products_categories");
+            inputCategory.setAttribute("name", "products[categories]");
+            inputCategory.setAttribute("value", document.getElementById('products_categories').value);
+            inputCategory.setAttribute("type", "hidden");
+
+            let inputSubCategory = document.createElement("input");
+            inputSubCategory.setAttribute("id", "products_subcategories");
+            inputSubCategory.setAttribute("name", "products[subcategories]");
+            inputSubCategory.setAttribute("value", document.getElementById('products_subcategories').value);
+            inputSubCategory.setAttribute("type", "hidden");
+
+            form.appendChild(inputSubCategory);
+            form.appendChild(inputCategory);
+            form.submit();
+        })
+
+        setSelectOptions(categorys, 'products_categories')
+        setSelectOptions(subcategorys, 'products_subcategories')
+    })
+
+    function setSelectOptions(data, id){
+        let select = document.getElementById(id)
+        let html = '<option></option>'
+        for(let item of data){
+            html += `<option value="${item.id}">${item.title}</option>`
+        }
+        select.innerHTML = html
+    }
+
+</script>

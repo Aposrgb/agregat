@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\SubCategories;
+use App\Helper\Filter\CategoriesFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +21,14 @@ class SubCategoriesRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, SubCategories::class);
+    }
+
+    public function getCategoriesByFilter(CategoriesFilter $categoriesFilter): Paginator
+    {
+        return new Paginator($this->createQueryBuilder('s')
+            ->setFirstResult($categoriesFilter->getPagination()->getFirstMaxResult())
+            ->setMaxResults($categoriesFilter->getPagination()->getLimit())
+        );
     }
 
     public function save(SubCategories $entity, bool $flush = false): void

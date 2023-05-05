@@ -51,7 +51,6 @@ class ImportService
                     $csvRev[2],
                     $csvRev[1],
                 ];
-
             }
             $name = trim($csv[0]);
             if (empty($csv[1])) {
