@@ -10,10 +10,19 @@ enum PurchaseStatus: int
 
     public function getTypeName(): string
     {
-        return match($this){
+        return match ($this) {
             self::WAIT_PAYMENT => "Ожидание доставки",
             self::PURCHASED => "Оплачено",
             self::CANCELLED => "Отменено"
         };
+    }
+
+    public static function getTypesName(): array
+    {
+        return [
+            "Ожидание доставки" => self::WAIT_PAYMENT->value,
+            "Оплачено" => self::PURCHASED->value,
+            "Отменено" => self::CANCELLED->value,
+        ];
     }
 }

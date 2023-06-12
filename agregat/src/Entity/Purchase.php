@@ -202,7 +202,7 @@ class Purchase
     }
 
     #[Groups(['get_purchase_user'])]
-    public function getPurchaseStatusName(): ?string
+    public function getStatusName(): ?string
     {
         return PurchaseStatus::tryFrom($this->status)?->getTypeName();
     }
@@ -254,4 +254,5 @@ class Purchase
 
         return $this;
     }
+
 }

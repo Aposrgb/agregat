@@ -19,6 +19,17 @@ enum PurchaseAddressType: int
         ];
     }
 
+    public static function getTypeByValue($value): string
+    {
+        return match ($value){
+            self::POINT_ISSUE => "Пункт выдачи",
+            self::POST_RUSSIA => "Почта России",
+            self::PICKUP => "Самовывоз",
+            self::DELIVERY => "Доставка",
+            default => ''
+        };
+    }
+
     public function getTypeName(): ?string
     {
         return match ($this){

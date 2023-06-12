@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Покупка{% endblock %}
+
+{% block body %}
+    <h1>Покупка</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ purchase.id }}</td>
+            </tr>
+            <tr>
+                <th>Дата покупки</th>
+                <td>{{ purchase.datePurchase ? purchase.datePurchase|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Статус покупки</th>
+                <td>{{ purchase.statusName }}</td>
+            </tr>
+            <tr>
+                <th>Дата доставки</th>
+                <td>{{ purchase.dateArrive ? purchase.dateArrive|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Тип доставки</th>
+                <td>{{ purchase.deliveryServiceName }}</td>
+            </tr>
+            <tr>
+                <th>Кол - во</th>
+                <td>{{ purchase.count }}</td>
+            </tr>
+            <tr>
+                <th>Цена</th>
+                <td>{{ purchase.price }}</td>
+            </tr>
+            <tr>
+                <th>Статус доставки</th>
+                <td>{{ purchase.deliveryStatusName }}</td>
+            </tr>
+            <tr>
+                <th>Адрес доставки</th>
+                <td>{{ purchase.deliveryAddress }}</td>
+            </tr>
+            <tr>
+                <th>Имя</th>
+                <td>{{ purchase.name }}</td>
+            </tr>
+            <tr>
+                <th>Фамилия</th>
+                <td>{{ purchase.surname }}</td>
+            </tr>
+            <tr>
+                <th>Телефон</th>
+                <td>{{ purchase.phone }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_purchase_index') }}">Вернуться к списку</a>
+
+    {{ include('purchase/_delete_form.html.twig') }}
+{% endblock %}

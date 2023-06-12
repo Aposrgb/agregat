@@ -113,6 +113,14 @@
 
                         <li onclick="openTab(this)" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle  text-white" id="navbarDropdown" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">Покупки</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ path('app_purchase_index') }}">Список</a></li>
+                            </ul>
+                        </li>
+
+                        <li onclick="openTab(this)" class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle  text-white" id="navbarDropdown" href="#" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">Настройки</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{{ path('app_settings_index') }}">Список</a></li>
