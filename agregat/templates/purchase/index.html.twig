@@ -14,6 +14,7 @@
                 <th>Дата доставки</th>
                 <th>Тип доставки</th>
                 <th>Кол - во</th>
+                <th>Название покупки</th>
                 <th>Цена</th>
                 <th>Статус доставки</th>
                 <th>Адрес доставки</th>
@@ -32,6 +33,7 @@
                 <td>{{ purchase.dateArrive ? purchase.dateArrive|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ purchase.deliveryServiceName }}</td>
                 <td>{{ purchase.count }}</td>
+                <td>{{ purchase.product.title }}</td>
                 <td>{{ purchase.price }}</td>
                 <td>{{ purchase.deliveryStatusName }}</td>
                 <td>{{ purchase.deliveryAddress }}</td>

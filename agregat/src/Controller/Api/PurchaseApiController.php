@@ -67,15 +67,6 @@ class PurchaseApiController extends AbstractController
             PurchaseDTO::class,
             'json'
         );
-        $products = [];
-        foreach ($purchaseDTO->getProducts() as $product) {
-            $products[] = $serializer->deserialize(
-                json_encode($product),
-                ProductDTO::class,
-                'json'
-            );
-        }
-        $purchaseDTO->setProducts($products);
         $validatorService->validate($purchaseDTO, ['create_purchase']);
         $purchaseService->createPurchase($purchaseDTO, $this->getUser());
         return $this->json(

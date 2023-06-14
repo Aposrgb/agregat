@@ -30,37 +30,28 @@ class PurchaseService
 
     public function createPurchase(PurchaseDTO $purchaseDTO, User $user): void
     {
-        $productIds = array_map(function (ProductDTO $productDTO) {
-            return $productDTO->getProductId();
-        }, $purchaseDTO->getProducts());
-        $products = $this->productsRepository->findBy([
-            'id' => $productIds
+        $baskets = $this->basketRepository->findBy([
+            'owner' => $user
         ]);
-        if (count($productIds) != count($products)) {
-            throw new ApiException(message: 'Не найден продукт', status: Response::HTTP_NOT_FOUND);
-        }
         $purchases = [];
+        $productIds = [];
         /** @var ProductDTO $productDTO */
-        foreach ($purchaseDTO->getProducts() as $productDTO) {
-            foreach ($products as $product) {
-                if ($product->getId() == $productDTO->getProductId()) {
-                    $purchase = (new Purchase())
-                        ->setStatus(PurchaseStatus::PURCHASED->value)
-                        ->setDeliveryStatus(DeliveryStatus::IN_PROCESS->value)
-                        ->setOwner($user)
-                        ->setPrice($productDTO->getCount() * $product->getPrice())
-                        ->setCount($productDTO->getCount())
-                        ->setProduct($product)
-                        ->setPhone($purchaseDTO->getPhone())
-                        ->setName($purchaseDTO->getName())
-                        ->setSurname($purchaseDTO->getSurname())
-                        ->setDeliveryService($purchaseDTO->getDeliveryService())
-                        ->setDeliveryAddress($purchaseDTO->getAddress());
-
-                    $this->purchaseRepository->save($purchase);
-                    $purchases[] = $purchase;
-                }
-            }
+        foreach ($baskets as $basket) {
+            $purchase = (new Purchase())
+                ->setStatus(PurchaseStatus::PURCHASED->value)
+                ->setDeliveryStatus(DeliveryStatus::IN_PROCESS->value)
+                ->setOwner($user)
+                ->setPrice($basket->getCount() * $basket->getProduct()->getPrice())
+                ->setCount($basket->getCount())
+                ->setProduct($basket->getProduct())
+                ->setPhone($purchaseDTO->getPhone())
+                ->setName($purchaseDTO->getName())
+                ->setSurname($purchaseDTO->getSurname())
+                ->setDeliveryService($purchaseDTO->getDeliveryService())
+                ->setDeliveryAddress($purchaseDTO->getAddress());
+            $productIds[]  = $basket->getProduct()->getId();
+            $this->purchaseRepository->save($purchase);
+            $purchases[] = $purchase;
         }
         $this->basketRepository->deleteBasketByUserProducts($user->getId(), $productIds);
         $this->entityManager->flush();

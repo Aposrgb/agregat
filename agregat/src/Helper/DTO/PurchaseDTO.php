@@ -10,13 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PurchaseDTO
 {
-    /** @OA\Property(type="array", @OA\Items(ref=@Model(type="App\Helper\DTO\ProductDTO", groups={"create_purchase"}))) */
-    #[Groups(['create_purchase'])]
-    #[Assert\Valid(groups: ['create_purchase'])]
-    #[Assert\NotBlank(groups: ['create_purchase'])]
-    #[Assert\Type(type: 'array', groups: ['create_purchase'])]
-    private array $products = [];
-
     /** @OA\Property(type="string", description="Имя") */
     #[Groups(['create_purchase'])]
     #[Assert\NotBlank(groups: ['create_purchase'])]
