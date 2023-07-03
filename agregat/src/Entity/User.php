@@ -98,6 +98,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['get_profile', 'get_purchase_user', 'get_product_detail'])]
     private ?string $photo = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isJuristic = null;
+
     public function __construct()
     {
         $this->devices = new ArrayCollection();
@@ -519,6 +522,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->photo = $photo;
 
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsJuristic(): ?bool
+    {
+        return $this->isJuristic;
+    }
+
+    /**
+     * @param bool|null $isJuristic
+     * @return User
+     */
+    public function setIsJuristic(?bool $isJuristic): User
+    {
+        $this->isJuristic = $isJuristic;
         return $this;
     }
 

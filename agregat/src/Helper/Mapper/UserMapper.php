@@ -23,6 +23,7 @@ class UserMapper implements MapperInterface
     {
         $entity = $entity ?? new User();
         return $entity
+            ->setIsJuristic($this->helperService->getActualValueBool($entity->getIsJuristic(), $dto->getIsJuristic()))
             ->setFirstname($this->helperService->getActualValue($entity->getFirstName(), $dto->getName()))
             ->setSurname($this->helperService->getActualValue($entity->getSurname(), $dto->getSurname()))
             ->setPatronymic($this->helperService->getActualValue($entity->getPatronymic(), $dto->getPatronymic()))

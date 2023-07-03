@@ -31,6 +31,12 @@ class UserDTO
     #[Groups(groups: ['registration', 'edit_user'])]
     private $name = null;
 
+    /** @OA\Property(type="boolean") */
+    #[Assert\NotBlank(message: 'Не должно быть пустым', groups: ['registration'])]
+    #[Assert\Type(type: 'boolean', groups: ['registration', 'edit_user'])]
+    #[Groups(groups: ['registration', 'edit_user'])]
+    private $isJuristic = null;
+
     /** @OA\Property(type="string") */
     #[Assert\NotBlank(message: 'Не должно быть пустым',groups: ['registration'])]
     #[Assert\Length(min: 2, max: 20, minMessage: 'Длина фамилии должна быть минимум 2 символа', maxMessage: 'Длина фамилии должна быть максимум 20 символов', groups: ['registration', 'edit_user'])]
@@ -316,6 +322,16 @@ class UserDTO
     public function setInn($inn)
     {
         $this->inn = $inn;
+        return $this;
+    }
+
+    public function getIsJuristic()
+    {
+        return $this->isJuristic;
+    }
+    public function setIsJuristic($isJuristic)
+    {
+        $this->isJuristic = $isJuristic;
         return $this;
     }
 
