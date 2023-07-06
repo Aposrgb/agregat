@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\Categories;
 use App\Entity\Products;
+use App\Entity\User;
+use App\Helper\DTO\Response\ProductResponse;
 use App\Helper\Exception\ApiException;
 use App\Helper\Filter\PaginationFilter;
 use App\Helper\Filter\ProductsFilter;
@@ -12,10 +14,12 @@ use App\Repository\CommentsRepository;
 use App\Repository\ProductsRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Security;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 
 class ProductsService
 {
+    const SALE_FOR_PHYSICAL = 7;
     const PRODUCTS_FILE_PATH = "/upload/products/img/";
 
     const AVAILABLE_IMAGE_EXTENSIONS = [
@@ -30,6 +34,20 @@ class ProductsService
         protected CommentsRepository $commentsRepository,
     )
     {
+    }
+
+    public function getProductResponseWithPrice(Products $products, ?User $user): ProductResponse
+    {
+        return new ProductResponse($products, $this->getProductPriceByUser($products, $user));
+    }
+
+    public function getProductPriceByUser(Products $products, ?User $user): int
+    {
+        $price = $products->getPrice();
+        if (!$user or !$user->getIsJuristic()) {
+            $price += ($price * self::SALE_FOR_PHYSICAL) / 100;
+        }
+        return $price;
     }
 
     /**

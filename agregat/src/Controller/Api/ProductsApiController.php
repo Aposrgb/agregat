@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Products;
+use App\Helper\DTO\Response\ProductResponse;
 use App\Helper\Exception\ApiException;
 use App\Helper\Filter\ProductsFilter;
 use App\Repository\ProductsRepository;
@@ -24,6 +25,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/products')]
 class ProductsApiController extends AbstractController
 {
+    public function __construct(
+        protected readonly ProductsService $productsService
+    )
+    {
+    }
+
     /**
      * Получение продуктов
      *
@@ -125,7 +132,7 @@ class ProductsApiController extends AbstractController
      *     @OA\JsonContent(
      *          @OA\Property(property="data", type="array",
      *              @OA\Items(
-     *                  ref=@Model(type="App\Entity\Products", groups={"get_products"})
+     *                  ref=@Model(type="App\Helper\DTO\Response\ProductResponse")
      *              )
      *          ),
      *          @OA\Property(property="count", type="integer"),
@@ -166,14 +173,16 @@ class ProductsApiController extends AbstractController
 
         return $this->json(
             data: [
-                "data" => $paginator,
+                "data" => array_map(
+                    fn(Products $products) => $this
+                        ->productsService
+                        ->getProductResponseWithPrice($products, $this->getUser()),
+                    $paginator
+                ),
                 "count" => $count,
                 "pageCount" => ceil($count / $productsFilter->getPagination()->getLimit()),
                 "currentPage" => (int)$productsFilter->getPagination()->getPage()
             ],
-            status: Response::HTTP_OK,
-            context: ['groups' => ['get_products']]
-
         );
     }
 
@@ -191,7 +200,7 @@ class ProductsApiController extends AbstractController
      *     description="Success",
      *     @OA\JsonContent(
      *          @OA\Property(property="data", type="object",
-     *              ref=@Model(type="App\Entity\Products", groups={"get_product_detail"})
+     *              ref=@Model(type="App\Helper\DTO\Response\ProductResponse")
      *          )
      *     )
      * )
@@ -208,7 +217,7 @@ class ProductsApiController extends AbstractController
         Products $product,
     ): JsonResponse
     {
-        return $this->json(data: ['data' => $product], context: ['groups' => ['get_product_detail']]);
+        return $this->json(data: ['data' => $this->productsService->getProductResponseWithPrice($product, $this->getUser())]);
     }
 
     /**
@@ -261,29 +270,5 @@ class ProductsApiController extends AbstractController
         $filter = $productsService->getFilterByProducts($products, $productsFilter);
 
         return $this->json(['data' => $filter], context: ['groups' => ['get_filter']]);
-    }
-
-    /**
-     * Загрузка xml из 1С
-     *
-     * @OA\RequestBody(
-     *      @OA\MediaType(
-     *          mediaType="multipart/form-data",
-     *          @OA\Schema(
-     *              @OA\Property(property="xmlFile", type="file", description="Xml - файл"),
-     *          )
-     *     )
-     * )
-     */
-//    #[Route('/import/xml', name: 'import_products_xml', methods: ["POST"])]
-    public function importXML(
-        Request $request,
-
-    ): JsonResponse
-    {
-        $xmlFile = $request->files->get('xmlFile');
-        return $this->json(
-            data: ['data' => []]
-        );
     }
 }

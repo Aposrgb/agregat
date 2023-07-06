@@ -2,13 +2,17 @@
     {{ form_row(form.isPopular) }}
     {% if category.img %}
         <div>
-            <img id="delete_category_img" src="{{ category.img }} " alt="����������� ���������" style="max-width: 250px;">
+            <img id="delete_category_img" src="{{ category.img }} " alt="����������� ���������"
+                 style="max-width: 250px;">
         </div>
+        {{ form_row(form.img, {required: false}) }}
+    {% else %}
+        {{ form_row(form.img) }}
     {% endif %}
-    {{ form_row(form.img) }}
+
     {{ form_row(form.title) }}
-    {{ form_row(form.description) }}
-    <button class="btn btn-success">{{ button_label|default('Сохранить') }}</button>
+    {{ form_row(form.description, {required: false}) }}
+<button class="btn btn-success">{{ button_label|default('Сохранить') }}</button>
 <div hidden>
     {{ form_rest(form) }}
 </div>

@@ -3,7 +3,9 @@
 namespace App\Controller\Api;
 
 use App\Entity\Basket;
+use App\Entity\User;
 use App\Helper\DTO\BasketDTO;
+use App\Helper\DTO\Response\BasketResponse;
 use App\Helper\Exception\ApiException;
 use App\Repository\BasketRepository;
 use App\Service\BasketService;
@@ -153,19 +155,28 @@ class BasketApiController extends AbstractController
      *     response="200",
      *     description="Ok",
      *     @OA\JsonContent(
-     *          @OA\Property(property="data",type="object",
-     *              ref=@Model(type="App\Entity\Basket", groups={"get_baskets"})
+     *          @OA\Property(property="data",type="array",
+     *              @OA\Items(
+     *                  ref=@Model(type="App\Helper\DTO\Response\BasketResponse")
+     *              )
      *          )
      *     )
      * )
      *
      */
     #[Route('', name: 'get_basket', methods: ['GEt'])]
-    public function getBaskets(): JsonResponse
+    public function getBaskets(ProductsService $productsService): JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
         return $this->json(
-            data: ['data' => $this->getUser()->getBaskets()],
-            context: ['groups' => ['get_baskets']]
+            data: ['data' => array_map(
+                fn(Basket $basket) => new BasketResponse(
+                    basket: $basket,
+                    productResponse: $productsService->getProductResponseWithPrice($basket->getProduct(), $user)
+                ),
+                $user->getBaskets()->getValues()
+            )]
         );
     }
 
