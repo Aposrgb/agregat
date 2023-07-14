@@ -1,6 +1,7 @@
 version: '3.3'
 services:
   postgres:
+    restart: always
     container_name: postgres-agregat
     image: postgres
     ports:
@@ -13,6 +14,7 @@ services:
       - agregat
   
   php-fpm:
+    restart: always
     container_name: php-fpm-agregat
     build:
       context: ./build/php-fpm
@@ -35,6 +37,7 @@ services:
       - agregat
   
   nginx:
+    restart: always
     image: nginx:latest
     container_name: nginx-agregat
     ports:
